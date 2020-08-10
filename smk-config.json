@@ -1,0 +1,116 @@
+{
+    "name": "bcdc-smk",
+    "viewer": {
+        "type": "leaflet",
+        "location": {
+            "center": [
+                -121.22719602072641,
+                51.67187164139945
+            ],
+            "extent": [
+                -124.83631446015231,
+                48.79271133819566,
+                -117.61807758130054,
+                54.378989656028104
+            ],
+            "zoom": 6.676380220353304
+        },
+        "baseMap": "Streets"
+    },
+    "layers": [],
+    "version": "0.9.0-beta.3",
+    "createdBy": "Kevin Netherton",
+    "createdDate": "2020-08-10T18:46:29.944Z",
+    "tools": [
+        {
+            "type": "toolbar",
+            "enabled": true
+        },
+        {
+            "type": "list-menu",
+            "enabled": true,
+            "title": "bcdc-smk"
+        },
+        {
+            "type": "pan",
+            "enabled": true
+        },
+        {
+            "type": "zoom",
+            "enabled": true
+        },
+        {
+            "type": "about",
+            "enabled": true,
+            "title": "About bcdc-smk",
+            "position": "list-menu",
+            "content": "<p>Welcome to SMK!</p><p>Core configuration for BCDC map previews</p>"
+        },
+        {
+            "type": "layers",
+            "enabled": true
+        },
+        {
+            "type": "baseMaps",
+            "enabled": false
+        },
+        {
+            "type": "identify",
+            "enabled": true,
+            "showPanel": true,
+            "showWidget": true,
+            "style": {
+                "strokeWidth": 1,
+                "strokeStyle": "1, 1",
+                "strokeColor": "#000000",
+                "strokeOpacity": 0.8,
+                "fillColor": "#000000",
+                "fillOpacity": 0.5,
+                "markerSize": [
+                    20,
+                    20
+                ],
+                "markerOffset": [
+                    10,
+                    0
+                ]
+            }
+        },
+        {
+            "type": "search",
+            "enabled": true
+        },
+        {
+            "type": "coordinate",
+            "enabled": true
+        },
+        {
+            "type": "measure",
+            "enabled": false
+        },
+        {
+            "type": "markup",
+            "enabled": false
+        },
+        {
+            "type": "scale",
+            "enabled": true
+        },
+        {
+            "type": "minimap",
+            "enabled": true
+        },
+        {
+            "type": "directions",
+            "enabled": false
+        },
+        {
+            "type": "location",
+            "enabled": false
+        },
+        {
+            "type": "select",
+            "enabled": false
+        }
+    ]
+}
