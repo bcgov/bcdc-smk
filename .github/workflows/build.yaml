@@ -23,15 +23,15 @@ jobs:
             fetch-depth: 0
 
 
-      - name: Create the docker image
-        uses: docker/build-push-action@v1
-        with:
-            registry: docker.pkg.github.com
-            username: $GITHUB_ACTOR
-            password: ${{ secrets.DOCKERHUB_PASSWORD }}
-            repository: bcgov/bcdc-smk/bcdc-smk
-            tag_with_ref: true
-            tag_with_sha: true
-            add_git_labels: true
-            tags: ${{ env.TAG_NAME }}
-            push: true
+        - name: Create the docker image
+          uses: docker/build-push-action@v1
+          with:
+              registry: docker.pkg.github.com
+              username: $GITHUB_ACTOR
+              password: ${{ secrets.DOCKERHUB_PASSWORD }}
+              repository: bcgov/bcdc-smk/bcdc-smk
+              tag_with_ref: true
+              tag_with_sha: true
+              add_git_labels: true
+              tags: ${{ env.TAG_NAME }}
+              push: true
