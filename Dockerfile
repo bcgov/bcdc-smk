@@ -14,4 +14,4 @@ EXPOSE 8080
 
 RUN ls -la /app/node_modules/.bin
 
-CMD ["node", "/app/node_modules/http-server/bin/http-server", "-s", "-S"]
+CMD ["node", "/app/node_modules/http-server/bin/http-server", "-s"]
