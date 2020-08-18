@@ -22,6 +22,8 @@ jobs:
             fetch-depth: 0
         - name: Create the docker image
           uses: docker/build-push-action@v1
+          env:
+            DOCKER_VERSION_TAG: $(date +%Y.%m.%d.%H%M)
           with:
             registry: docker.pkg.github.com
             username: $GITHUB_ACTOR
@@ -30,5 +32,5 @@ jobs:
             tag_with_ref: true
             tag_with_sha: true
             add_git_labels: true
-            tags: ${{ env.TAG_NAME }}
+            tags: ${{ env.TAG_NAME }}, ${{ env.DOCKER_VERSION_TAG }}
             push: true
