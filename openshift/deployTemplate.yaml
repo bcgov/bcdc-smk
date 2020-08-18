@@ -20,7 +20,9 @@ parameters:
   - name: "DEPLOY_NAMESPACE"
     description: "The namespace / project where the template is to be deployed"
     value: dbc-kirk-tools
-
+  - name: "IMAGE_LABEL"
+    description: "the label that identifies what image to deploy"
+    value: ":latest"
 
 objects:
   - kind: "DeploymentConfig"
@@ -59,7 +61,7 @@ objects:
             deploymentconfig: ${NAME}-${ENV}-dc
         spec:
           containers:
-            - image: ${CONTAINER_SRC}
+            - image: ${CONTAINER_SRC}${IMAGE_LABEL}
               imagePullPolicy: IfNotPresent
               name: ${NAME}-${ENV}-app
               ports:
@@ -74,6 +76,16 @@ objects:
           restartPolicy: Always
           schedulerName: default-scheduler
           securityContext: {}
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
           terminationGracePeriodSeconds: 30
       test: false
       triggers:
