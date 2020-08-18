@@ -21,7 +21,7 @@ jobs:
             # Disabling shallow clone is recommended for improving relevancy of reporting
             fetch-depth: 0
         - name: Setting the env var with datetime tag
-          run: echo ::set-env name=DOCKER_VERSION_TAG::$(date +%Y.%m.%d.%H%M)
+          run: echo ::set-env name=DOCKER_VERSION_TAG::$(date +%Y%m%d-%H%M)
         - name: Create the docker image
           uses: docker/build-push-action@v1
           with:
