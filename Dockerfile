@@ -1,5 +1,5 @@
-#FROM node:lts-alpine
-FROM node:12
+FROM node:lts-alpine
+#FROM node:12
 RUN mkdir /app
 COPY . /app
 #ADD . /app
