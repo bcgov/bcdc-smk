@@ -32,5 +32,5 @@ jobs:
             tag_with_ref: true
             tag_with_sha: true
             add_git_labels: true
-            tags: ${{ env.TAG_NAME }},${{ env.DOCKER_VERSION_TAG }}
+            tags: ${{ env.DOCKER_VERSION_TAG }}
             push: true
