@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: BCDC_SMK_PIPELINE_TEMPLATE
+labels:
+  app: bcdc-smk-pipeline
+parameters:
+  - name: DEPLOY_NAMESPACE
+    description: "base name for the all objects"
+    value: dbc-kirk-dev
+  - name: PIPELINE_NAME
+    description: "the pipeline script that is used to deploy the docker image"
+    value: bcdc-smk-pipeline
+objects:
+  - kind: "BuildConfig"
+    apiVersion: "v1"
+    metadata:
+        name: ${PIPELINE_NAME}
+    spec:
+        strategy:
+            jenkinsPipelineStrategy:
+                type: JenkinsPipeline
+                jenkinsfile: |-
+                    pipeline {
+                        agent {
+                            node {
+                            // spin up a node.js slave pod to run this build on
+                            label 'nodejs'
+                            }
+                        }
+                        options {
+                            disableResume()
+                        }
+                        environment {
+                            DEMO_ENV = 'demoenvstr'
+                        }
+                        stages {
+                            stage('Build-Dev') {
+                                steps {
+                                    sh '''
+                                    echo demo shell call
+                                    '''                                
+                                    }
+                            }
+                            stage('Deploy-DEV') {
+                                steps {
+                                    sh "echo another stage" 
+                                }
+                            }
+                        }
+                    }

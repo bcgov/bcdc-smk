@@ -4,33 +4,64 @@ name: BUILD Package
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
+# DEBUGGING COMMENTING OUT
+# on:
+#   pull_request:
+#     branches: ['master']
+
 on:
-  pull_request:
-    branches: ['master']
+  repository_dispatch:
+    types: [opened, deleted]
 
 jobs:
-    # This workflow contains a single job called "build"
-    build:
-        # The type of runner that the job will run on
-        runs-on: ubuntu-latest
-        # Steps represent a sequence of tasks that will be executed as part of the job
-        steps:
-        # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-        - uses: actions/checkout@v2
-          with:
-            # Disabling shallow clone is recommended for improving relevancy of reporting
-            fetch-depth: 0
-        - name: Setting the env var with datetime tag
-          run: echo ::set-env name=DOCKER_VERSION_TAG::$(date +%Y%m%d-%H%M)
-        - name: Create the docker image
-          uses: docker/build-push-action@v1
-          with:
-            registry: docker.pkg.github.com
-            username: $GITHUB_ACTOR
-            password: ${{ secrets.GITHUB_TOKEN  }}
-            repository: bcgov/bcdc-smk/bcdc-smk
-            tag_with_ref: true
-            tag_with_sha: true
-            add_git_labels: true
-            tags: ${{ env.DOCKER_VERSION_TAG }}
-            push: true
+  # This workflow contains a single job called "build"
+  buildjob:
+    name: Build BCDC-SMK container image
+    # The type of runner that the job will run on
+    runs-on: ubuntu-18.04
+    outputs:
+      containerTag:
+        description: "calculate the tag id"
+        value: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+      id: checkout
+      with:
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+        fetch-depth: 0
+    - name: Setting the env var with datetime tag
+      id: calculateImageTag
+      run: echo ::set-output name=DOCKER_VERSION_TAG::$(date +%Y%m%d-%H%M)
+
+      # THIS IS
+    - name: testing the output
+      id: testoutput
+      run: echo tag version is ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
+
+    # - name: Create the docker image
+    #   uses: docker/build-push-action@v1
+    #   with:
+    #     registry: docker.pkg.github.com
+    #     username: $GITHUB_ACTOR
+    #     password: ${{ secrets.GITHUB_TOKEN  }}
+    #     repository: bcgov/bcdc-smk/bcdc-smk
+    #     tag_with_ref: true
+    #     tag_with_sha: true
+    #     add_git_labels: true
+    #     tags: ${{ env.DOCKER_VERSION_TAG }}
+    #     push: true
+
+
+  # outputs syntax works apparently in GHA but not using ACT.
+  deployDev:
+    name: Deploy the image to delivery environment
+    needs: buildjob
+    runs-on: ubuntu-18.04
+    # reference tag using: ${{ needs.buildjob.outputs.containerTag}}
+    steps:
+    - run: echo image tag is ${{ needs.buildjob.outputs.containerTag.DOCKER_VERSION_TAG}} 
+
+
+
