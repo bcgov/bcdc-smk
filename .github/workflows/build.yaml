@@ -10,9 +10,10 @@ name: BUILD Package
 #     branches: ['master']
 
 on:
-  repository_dispatch:
-    types: [opened, deleted]
-
+  push:
+    branches:    
+      - dev
+      
 jobs:
   # This workflow contains a single job called "build"
   buildjob:

@@ -11,3 +11,5 @@
 `oc process -f <github raw reference to deployTemplate.yaml> -p ENV='dev' -p | oc create -f -"`
 * Same command but local reference to the template file:
 `oc process -f ./deployTemplate.yaml -p ENV=dev | oc create -f -`
+
+
