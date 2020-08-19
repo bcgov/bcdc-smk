@@ -4,7 +4,7 @@ name: BUILD Package
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
-# DEBUGGING COMMENTING OUT
+# -------- DEBUGGING --------
 # on:
 #   pull_request:
 #     branches: ['master']
@@ -30,6 +30,9 @@ jobs:
       id: checkout
       with:
         # Disabling shallow clone is recommended for improving relevancy of reporting
+        # -------- DEBUGGING --------
+        # 
+        ref: dev
         fetch-depth: 0
     - name: Setting the env var with datetime tag
       id: calculateImageTag
@@ -39,7 +42,8 @@ jobs:
     - name: testing the output
       id: testoutput
       run: echo tag version is ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
-
+    
+    # -------- DEBUGGING --------
     # - name: Create the docker image
     #   uses: docker/build-push-action@v1
     #   with:
@@ -53,7 +57,7 @@ jobs:
     #     tags: ${{ env.DOCKER_VERSION_TAG }}
     #     push: true
 
-
+  # -------- DEBUGGING --------
   # outputs syntax works apparently in GHA but not using ACT.
   deployDev:
     name: Deploy the image to delivery environment
