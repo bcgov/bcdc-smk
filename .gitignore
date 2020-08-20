@@ -106,3 +106,4 @@ dist
 openshift/junk.js
 openshift/jenkins_etltools_deployconfig.yaml
 openshift/jenkins_bcdctools_deployconfig.yaml
+openshift/junk.yaml

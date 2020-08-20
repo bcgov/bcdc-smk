@@ -13,3 +13,9 @@
 `oc process -f ./deployTemplate.yaml -p ENV=dev | oc create -f -`
 
 
+# GHA 
+
+* link for sharing between steps:
+   * https://stackoverflow.com/questions/58675200/in-github-actions-can-i-return-back-a-value-to-be-used-as-a-condition-later
+   * https://github.com/marketplace/actions/persist-data-between-jobs
+   * https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idneeds
