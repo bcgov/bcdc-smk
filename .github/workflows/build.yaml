@@ -21,7 +21,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-18.04
     outputs:
-      output1: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
+      dockerversiontag: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
@@ -69,9 +69,9 @@ jobs:
     - id: getversiontag
       # THIS WORKS ON GHA but not using ACT
       run: |
-        echo image tag is ${{ needs.buildjob.outputs.output1}}
-        echo ::set-output name=DOCKER_VERSION_TAG::${{ needs.buildjob.outputs.output1}}
-        echo testing set of env var: $DOCKER_VERSION_TAG
+        echo image tag is ${{ needs.buildjob.outputs.dockerversiontag}}
+        echo ::set-output name=DOCKER_VERSION_TAG::${{ needs.buildjob.outputs.dockerversiontag}}
+        echo testing set of env var: ${{ DOCKER_VERSION_TAG }}
 
     - id: printenv
       run: echo testing set of env var in another step $DOCKER_VERSION_TAG
