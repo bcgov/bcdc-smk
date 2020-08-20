@@ -71,6 +71,7 @@ jobs:
       run: |
         echo image tag is ${{ needs.buildjob.outputs.dockerversiontag}}
         echo ::set-output name=DOCKER_VERSION_TAG::${{ needs.buildjob.outputs.dockerversiontag}}
+        echo "::set-env name=action_state::${{ needs.buildjob.outputs.dockerversiontag}}"
         echo testing set of env var: ${{ DOCKER_VERSION_TAG }}
 
     - id: printenv
