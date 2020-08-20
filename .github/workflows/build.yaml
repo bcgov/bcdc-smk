@@ -65,9 +65,18 @@ jobs:
     name: Deploy the image to delivery environment
     needs: buildjob
     runs-on: ubuntu-18.04
-    # reference tag using: ${{ needs.buildjob.outputs.containerTag}}
     steps:
-    - run: echo image tag is ${{ needs.buildjob.outputs.output1}} 
+    - id: getversiontag
+      # THIS WORKS ON GHA but not using ACT
+      run: |
+        echo image tag is ${{ needs.buildjob.outputs.output1}}
+        echo ::set-output name=DOCKER_VERSION_TAG::${{ needs.buildjob.outputs.output1}}
+        echo testing set of env var: $DOCKER_VERSION_TAG
+
+    - id: printenv
+      run: echo testing set of env var in another step $DOCKER_VERSION_TAG
+
+
 
 
 
