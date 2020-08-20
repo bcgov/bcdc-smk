@@ -20,11 +20,6 @@ jobs:
     name: Build BCDC-SMK container image
     # The type of runner that the job will run on
     runs-on: ubuntu-18.04
-    outputs:
-      containerTag:
-        #description: 'calculate the tag id'
-        value: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
@@ -35,11 +30,15 @@ jobs:
         # 
         ref: dev
         fetch-depth: 0
-    - name: Setting the env var with datetime tag
+    - name: calculateImageTag
       id: calculateImageTag
       run: echo ::set-output name=DOCKER_VERSION_TAG::$(date +%Y%m%d-%H%M)
+      outputs:
+        containerTag:
+          description: 'calculate the tag id'
+          value: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
 
-      # THIS IS
+
     - name: testing the output
       id: testoutput
       run: echo tag version is ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
