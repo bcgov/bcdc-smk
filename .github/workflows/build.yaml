@@ -28,7 +28,7 @@ jobs:
         # Disabling shallow clone is recommended for improving relevancy of reporting
         # -------- DEBUGGING --------
         # 
-        ref: dev
+        #ref: v2
         fetch-depth: 0
     - name: calculateImageTag
       id: calculateImageTag
