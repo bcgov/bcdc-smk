@@ -33,10 +33,10 @@ jobs:
     - name: calculateImageTag
       id: calculateImageTag
       run: echo ::set-output name=DOCKER_VERSION_TAG::$(date +%Y%m%d-%H%M)
-      outputs:
-        containerTag:
-          description: 'calculate the tag id'
-          value: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
+      # outputs:
+      #   containerTag:
+      #     description: 'calculate the tag id'
+      #     value: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
 
 
     - name: testing the output
