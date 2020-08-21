@@ -56,7 +56,7 @@ jobs:
         tag_with_ref: true
         tag_with_sha: true
         add_git_labels: true
-        tags: ${{ env.DOCKER_VERSION_TAG }}
+        tags: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
         push: true
 
   # -------- DEBUGGING --------
@@ -88,7 +88,7 @@ jobs:
       #uses: redhat-developer/openshift-action
       run: |
         oc login --server=${{ secrets.OPENSHIFT_SERVER_URL }} --token=${{ secrets.API_TOKEN }}
-        oc -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG
+        oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | oc replace -f -
 
 
       
