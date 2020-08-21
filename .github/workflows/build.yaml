@@ -87,6 +87,7 @@ jobs:
       name: OpenShift deploy template
       #uses: redhat-developer/openshift-action
       run: |
+        ls -l
         oc login --server=${{ secrets.OPENSHIFT_SERVER_URL }} --token=${{ secrets.API_TOKEN }}
         oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | oc replace -f -
 
