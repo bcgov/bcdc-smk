@@ -93,7 +93,7 @@ jobs:
       #uses: redhat-developer/openshift-action
       run: |
         ls -l
-        oc login --server=${{ secrets.OPENSHIFT_SERVER_URL }} --token=${{ secrets.API_TOKEN }}
+        oc login ${{ secrets.OPENSHIFT_SERVER_URL }} --token=${{ secrets.API_TOKEN }}
         oc project dbc-kirk-tools 
         oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | oc replace -f -
 
