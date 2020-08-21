@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: BCDC_SMK_TEMPLATE
+labels:
+  app: bcdc-smk
+parameters:
+  - name: NAME
+    description: "base name for the all objects"
+    value: bcdcsmk
+  - name: ENV
+    description: "this is dev|test|prd"
+    value: dev
+  - name: "CONTAINER_SRC"
+    description: "path to the container/image stream"
+    value: docker.pkg.github.com/bcgov/bcdc-smk/bcdc-smk
+  - name: "CONTAINER_SRC_SECRET_NAME"
+    description: "name of the secret that is used to retrieve the container, require by github hosted packages (images)"
+    value: bcdc-smk-image-access-secret
+  - name: "DEPLOY_NAMESPACE"
+    description: "The namespace / project where the template is to be deployed"
+    value: dbc-kirk-tools
+  - name: "IMAGE_LABEL"
+    description: "the label that identifies what image to deploy"
+    value: ":latest"
+
+  - kind: "DeploymentConfig"
+    apiVersion: "v1"
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+      generation: 4
+      labels:
+        app: ${NAME}-${ENV}-app
+      name: ${NAME}-${ENV}-dc
+      namespace: ${DEPLOY_NAMESPACE}
+    spec:
+      selector:
+        app: ${NAME}-${ENV}-app
+        deploymentconfig: ${NAME}-${ENV}-dc
+      template:
+        metadata:
+          labels:
+            app: ${NAME}-${ENV}-app
+            deploymentconfig: ${NAME}-${ENV}-dc
+        spec:
+          containers:
+            - image: ${CONTAINER_SRC}${IMAGE_LABEL}
+              name: ${NAME}-${ENV}-app
+          imagePullSecrets:
+            - name: ${CONTAINER_SRC_SECRET_NAME}

@@ -46,18 +46,18 @@ jobs:
       run: echo tag version is ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
     
     # -------- DEBUGGING --------
-    # - name: Create the docker image
-    #   uses: docker/build-push-action@v1
-    #   with:
-    #     registry: docker.pkg.github.com
-    #     username: $GITHUB_ACTOR
-    #     password: ${{ secrets.GITHUB_TOKEN  }}
-    #     repository: bcgov/bcdc-smk/bcdc-smk
-    #     tag_with_ref: true
-    #     tag_with_sha: true
-    #     add_git_labels: true
-    #     tags: ${{ env.DOCKER_VERSION_TAG }}
-    #     push: true
+    - name: Create the docker image
+      uses: docker/build-push-action@v1
+      with:
+        registry: docker.pkg.github.com
+        username: $GITHUB_ACTOR
+        password: ${{ secrets.GITHUB_TOKEN  }}
+        repository: bcgov/bcdc-smk/bcdc-smk
+        tag_with_ref: true
+        tag_with_sha: true
+        add_git_labels: true
+        tags: ${{ env.DOCKER_VERSION_TAG }}
+        push: true
 
   # -------- DEBUGGING --------
   # outputs syntax works apparently in GHA but not using ACT.
@@ -70,12 +70,19 @@ jobs:
       # THIS WORKS ON GHA but not using ACT
       run: |
         echo image tag is ${{ needs.buildjob.outputs.dockerversiontag}}
-        echo ::set-output name=DOCKER_VERSION_TAG::${{ needs.buildjob.outputs.dockerversiontag}}
         echo "::set-env name=DOCKER_VERSION_TAG::${{ needs.buildjob.outputs.dockerversiontag}}"
         echo testing set of env var: $DOCKER_VERSION_TAG
-
     - id: printenv
       run: echo testing set of env var in another step $DOCKER_VERSION_TAG
+    - id: deploytemplate
+    - name: OpenShift deploy template
+      uses: redhat-developer/openshift-action
+      run: |
+        oc login --server=${{ secrets.OPENSHIFT_URL }} --token=${{ secrets.OPENSHIFT_TOKEN }}
+        oc -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG
+
+
+      
 
 
 

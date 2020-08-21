@@ -22,7 +22,8 @@ parameters:
     value: dbc-kirk-tools
   - name: "IMAGE_LABEL"
     description: "the label that identifies what image to deploy"
-    value: ":latest"
+    value: "latest"
+
 
 objects:
   - kind: "DeploymentConfig"
@@ -61,7 +62,7 @@ objects:
             deploymentconfig: ${NAME}-${ENV}-dc
         spec:
           containers:
-            - image: ${CONTAINER_SRC}${IMAGE_LABEL}
+            - image: "${CONTAINER_SRC}:${IMAGE_LABEL}"
               imagePullPolicy: IfNotPresent
               name: ${NAME}-${ENV}-app
               ports:
@@ -101,6 +102,7 @@ objects:
       name: ${NAME}-${ENV}-svc
       namespace: ${DEPLOY_NAMESPACE}
     spec:
+      clusterIP: "172.50.165.118"
       ports:
         - name: 8080-tcp
           port: 8080
