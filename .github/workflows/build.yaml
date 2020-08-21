@@ -90,13 +90,13 @@ jobs:
         parameters: '{"apitoken": "${{ secrets.API_TOKEN }}", "acceptUntrustedCerts": "true"}'
         cmd: 'version'
 
-      - name: followingScript
-        id: followingScript
-        run: |
-          oc version
-          oc whoami
-          oc status
-          oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | oc replace -n dbc-kirk-tools -f -
+    - name: followingScript
+      id: followingScript
+      run: |
+        oc version
+        oc whoami
+        oc status
+        oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | oc replace -n dbc-kirk-tools -f -
 
     # - id: deploytemplate
     #   name: OpenShift deploy template
