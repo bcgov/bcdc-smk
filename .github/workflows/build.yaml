@@ -75,7 +75,7 @@ jobs:
     - id: printenv
       run: echo testing set of env var in another step $DOCKER_VERSION_TAG
     - id: deploytemplate
-    - name: OpenShift deploy template
+      name: OpenShift deploy template
       uses: redhat-developer/openshift-action
       run: |
         oc login --server=${{ secrets.OPENSHIFT_URL }} --token=${{ secrets.OPENSHIFT_TOKEN }}
