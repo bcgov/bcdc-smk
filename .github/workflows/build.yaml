@@ -81,6 +81,7 @@ jobs:
         fetch-depth: 0
 
     - name: OpenShift Action
+      id: GHAOpenshiftTest
       uses: redhat-developer/openshift-actions@v1.1
       with:
         version: '3.11.232'
@@ -90,13 +91,18 @@ jobs:
 
     - id: deploytemplate
       name: OpenShift deploy template
-      #uses: redhat-developer/openshift-action
-      run: |
-        oc login ${{ secrets.OPENSHIFT_SERVER_URL }} --token=${{ secrets.API_TOKEN }}
-        oc whoami
-        oc status
-        oc project dbc-kirk-tools 
-        oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | oc replace -f -
+      uses: redhat-developer/openshift-actions@v1.1
+      with:
+        version: '3.11.232'
+        openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
+        parameters: '{"apitoken": "${{ secrets.API_TOKEN }}", "acceptUntrustedCerts": "true"}'
+        run: |
+          oc login ${{ secrets.OPENSHIFT_SERVER_URL }} --token=${{ secrets.API_TOKEN }}
+          oc version
+          oc whoami
+          oc status
+          oc project dbc-kirk-tools 
+          oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | oc replace -n dbc-kirk-tools -f -
 
 
       
