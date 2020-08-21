@@ -75,13 +75,14 @@ jobs:
     - id: printenv
       run: echo testing set of env var in another step $DOCKER_VERSION_TAG
     - uses: actions/checkout@v1    
-    - id: configopenshift
-      name: OpenShift Action
+    - name: OpenShift Action
       uses: redhat-developer/openshift-actions@v1.1
       with:
         version: 'latest'
         openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
         parameters: '{"apitoken": "${{ secrets.API_TOKEN }}", "acceptUntrustedCerts": "true"}'
+        cmd: 'version'
+
     - id: deploytemplate
       name: OpenShift deploy template
       #uses: redhat-developer/openshift-action
