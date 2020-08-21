@@ -74,7 +74,12 @@ jobs:
         echo testing set of env var: $DOCKER_VERSION_TAG
     - id: printenv
       run: echo testing set of env var in another step $DOCKER_VERSION_TAG
-    - uses: actions/checkout@v1    
+
+    - uses: actions/checkout@v2
+      id: checkout
+      with:
+        fetch-depth: 0
+
     - name: OpenShift Action
       uses: redhat-developer/openshift-actions@v1.1
       with:
@@ -89,6 +94,7 @@ jobs:
       run: |
         ls -l
         oc login --server=${{ secrets.OPENSHIFT_SERVER_URL }} --token=${{ secrets.API_TOKEN }}
+        oc project dbc-kirk-tools 
         oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | oc replace -f -
 
 
