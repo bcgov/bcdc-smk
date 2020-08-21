@@ -34,7 +34,8 @@ jobs:
         fetch-depth: 0
     - name: calculateImageTag
       id: calculateImageTag
-      run: echo ::set-output name=DOCKER_VERSION_TAG::$(date +%Y%m%d-%H%M)
+      #run: echo ::set-output name=DOCKER_VERSION_TAG::$(date +%Y%m%d-%H%M)
+      run: echo ::set-output name=DOCKER_VERSION_TAG::20200821-1547
       # outputs:
       #   containerTag:
       #     description: 'calculate the tag id'
@@ -46,18 +47,18 @@ jobs:
       run: echo tag version is ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
     
     # -------- DEBUGGING --------
-    - name: Create the docker image
-      uses: docker/build-push-action@v1
-      with:
-        registry: docker.pkg.github.com
-        username: $GITHUB_ACTOR
-        password: ${{ secrets.GITHUB_TOKEN  }}
-        repository: bcgov/bcdc-smk/bcdc-smk
-        tag_with_ref: true
-        tag_with_sha: true
-        add_git_labels: true
-        tags: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
-        push: true
+    # - name: Create the docker image
+    #   uses: docker/build-push-action@v1
+    #   with:
+    #     registry: docker.pkg.github.com
+    #     username: $GITHUB_ACTOR
+    #     password: ${{ secrets.GITHUB_TOKEN  }}
+    #     repository: bcgov/bcdc-smk/bcdc-smk
+    #     tag_with_ref: true
+    #     tag_with_sha: true
+    #     add_git_labels: true
+    #     tags: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
+    #     push: true
 
   # -------- DEBUGGING --------
   # outputs syntax works apparently in GHA but not using ACT.
@@ -90,7 +91,8 @@ jobs:
         cmd: 'version'
 
       - name: followingScript
-        run:  |
+        id: followingScript
+        run: |
           oc version
           oc whoami
           oc status
