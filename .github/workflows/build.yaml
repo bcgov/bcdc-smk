@@ -74,9 +74,16 @@ jobs:
         echo testing set of env var: $DOCKER_VERSION_TAG
     - id: printenv
       run: echo testing set of env var in another step $DOCKER_VERSION_TAG
+
+    - id: configOpenshift
+      name: OpenShift Action
+      uses: redhat-developer/openshift-action
+      with:
+        version: '3.11.90'
+
     - id: deploytemplate
       name: OpenShift deploy template
-      uses: redhat-developer/openshift-action
+      #uses: redhat-developer/openshift-action
       run: |
         oc login --server=${{ secrets.OPENSHIFT_URL }} --token=${{ secrets.OPENSHIFT_TOKEN }}
         oc -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG
