@@ -102,7 +102,7 @@ jobs:
         # oc rollout status dc/bcdcsmk-dev-dc -n dbc-kirk-tools
 
         # get the route name from the template.
-        # echo "::set-env name=ROUTE_NAME::${{ oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | jq '.items[] | select(.kind=="Route") |.metadata.name' }}
+        # echo "::set-env name=ROUTE_NAME::${{ oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | jq '.items[] | select(.kind=="Route") | .metadata.name' }}
         # verify route name:
         # echo route name is $ROUTE_NAME
         # using that name get the route host/port
