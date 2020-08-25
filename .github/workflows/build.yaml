@@ -95,18 +95,19 @@ jobs:
       id: deploy-dev
       run: |
         oc version
+        whereis oc
         # commented out while debugging
         #oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | oc replace -n dbc-kirk-tools -f -
         #oc rollout status dc/bcdcsmk-dev-dc -n dbc-kirk-tools
 
         # get the route name from the template.
-        echo "::set-env name=ROUTE_NAME::${{ oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | jq '.items[] | select(.kind=="Route") |.metadata.name' }}
+        #echo "::set-env name=ROUTE_NAME::${{ oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | jq '.items[] | select(.kind=="Route") |.metadata.name' }}
         # verify route name:
-        echo route name is $ROUTE_NAME
+        #echo route name is $ROUTE_NAME
         # using that name get the route host/port
-        echo "::set-env name=ROUTE_PATH=${{ oc get routes -n dbc-kirk-tools -o json | jq '.items[] | select(.metadata.name==${{ ROUTE_NAME  }}) | .spec.host' | tr -d '"' }}
+        #echo "::set-env name=ROUTE_PATH=${{ oc get routes -n dbc-kirk-tools -o json | jq '.items[] | select(.metadata.name==${{ ROUTE_NAME  }}) | .spec.host' | tr -d '"' }}
         # update the PR to 'review' and include link to the route for review
-        echo here update the pr with the route to ${{ ROUTE_PATH }}
+        #echo here update the pr with the route to ${{ ROUTE_PATH }}
 
           
 
