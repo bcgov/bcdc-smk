@@ -82,4 +82,3 @@ oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=20200821
 * oc replace
 * finally oc rollout status that waits for it to complete.
 
-oc rollout status dc/bcdcsmk-dev-dc -n dbc-kirk-tools
