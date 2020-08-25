@@ -51,6 +51,7 @@ objects:
           maxUnavailable: 25%
           timeoutSeconds: 600
           updatePeriodSeconds: 1
+        
         type: Rolling
       template:
         metadata:
@@ -77,6 +78,16 @@ objects:
           restartPolicy: Always
           schedulerName: default-scheduler
           securityContext: {}
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
           readinessProbe:
             failureThreshold: 3
             httpGet:
@@ -102,7 +113,6 @@ objects:
       name: ${NAME}-${ENV}-svc
       namespace: ${DEPLOY_NAMESPACE}
     spec:
-      clusterIP: "172.50.165.118"
       ports:
         - name: 8080-tcp
           port: 8080
@@ -112,7 +122,6 @@ objects:
         app: ${NAME}-${ENV}-app
         deploymentconfig: ${NAME}-${ENV}-dc
       sessionAffinity: None
-      type: ClusterIP
     
   - kind: Route
     apiVersion: v1

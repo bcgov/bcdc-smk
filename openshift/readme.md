@@ -58,3 +58,28 @@ $ oc process -f ./deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=20200818-1726 | 
 1. allow service account access to the image secret (edit account yaml)
 1. (later) - get service account and role assignement into template
 1. github actions - create secrets for openshift url and openshift api token
+
+
+
+# Troubleshooting
+
+## Rollback a deployment
+oc rollout <tag of image to be rolled out> dc/bcdcsmk-dev-dc -n <oc namespace>
+
+### monitor rollout
+
+#### Example link to deploy template using url
+
+oc process -f https://raw.githubusercontent.com/bcgov/bcdc-smk/dev/openshift/deployTemplate.yaml  -p ENV=dev -p IMAGE_LABEL=20200821-1547 | oc replace -n dbc-kirk-tools -f -
+
+#### Example link to deploy template using local file reference
+oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=20200821-1547 | oc replace -n dbc-kirk-tools -f -
+
+
+#### Glueing it together:
+
+* processing template pipeing into...
+* oc replace
+* finally oc rollout status that waits for it to complete.
+
+oc rollout status dc/bcdcsmk-dev-dc -n dbc-kirk-tools

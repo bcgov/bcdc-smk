@@ -46,7 +46,7 @@ jobs:
       id: testoutput
       run: echo tag version is ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
     
-    # -------- DEBUGGING --------
+    # -------- DEBUGGING uncomment when done --------
     # - name: Create the docker image
     #   uses: docker/build-push-action@v1
     #   with:
@@ -90,28 +90,31 @@ jobs:
         parameters: '{"apitoken": "${{ secrets.API_TOKEN }}", "acceptUntrustedCerts": "true"}'
         cmd: 'version'
 
-    - name: followingScript
-      id: followingScript
+
+    - name: deploy-dev
+      id: deploy-dev
       run: |
         oc version
-        oc whoami
-        oc status
-        oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | oc replace -n dbc-kirk-tools -f -
+        # commented out while debugging
+        #oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | oc replace -n dbc-kirk-tools -f -
+        #oc rollout status dc/bcdcsmk-dev-dc -n dbc-kirk-tools
 
-    # - id: deploytemplate
-    #   name: OpenShift deploy template
-    #   uses: redhat-developer/openshift-actions@v1.1
-    #   with:
-    #     version: '3.11.232'
-    #     openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
-    #     parameters: '{"apitoken": "${{ secrets.API_TOKEN }}", "acceptUntrustedCerts": "true"}'
-    #     run: |
-    #       oc login ${{ secrets.OPENSHIFT_SERVER_URL }} --token=${{ secrets.API_TOKEN }}
-    #       oc version
-    #       oc whoami
-    #       oc status
-    #       oc project dbc-kirk-tools 
-    #       oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | oc replace -n dbc-kirk-tools -f -
+        # get the route name from the template.
+        echo "::set-env name=ROUTE_NAME::${{ oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | jq '.items[] | select(.kind=="Route") |.metadata.name' }}
+        # verify route name:
+        echo route name is $ROUTE_NAME
+        # using that name get the route host/port
+        echo "::set-env name=ROUTE_PATH=${{ oc get routes -n dbc-kirk-tools -o json | jq '.items[] | select(.metadata.name==${{ ROUTE_NAME  }}) | .spec.host' | tr -d '"' }}
+        # update the PR to 'review' and include link to the route for review
+        echo here update the pr with the route to ${{ ROUTE_PATH }}
+
+          
+
+
+
+
+
+
 
 
       
