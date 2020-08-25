@@ -101,5 +101,9 @@ jobs:
         oc whoami
         oc status
         whereis oc
-        var=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=latest | jq '.items[] | select(.kind=="Route") | .metadata.name')
-        echo route name is $var
+        ROUTENAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=latest | jq '.items[] | select(.kind=="Route") | .metadata.name')
+        echo route name is $ROUTENAME
+
+        ROUTEPATH=$(oc get routes -n dbc-kirk-tools -o json | jq  '.items[] | select(.metadata.name=='$ROUTENAME') | .spec.host' | tr -d '"')
+
+        echo route is $ROUTEPATH
