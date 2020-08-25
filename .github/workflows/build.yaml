@@ -65,6 +65,9 @@ jobs:
   deployDev:
     name: Deploy the image to delivery environment
     needs: buildjob
+    defaults:
+      run:
+        shell: bash
     runs-on: ubuntu-18.04
     steps:
     - id: getversiontag
@@ -97,5 +100,6 @@ jobs:
         oc version
         oc whoami
         oc status
-        echo "::set-env name=ROUTE_NAME::${{ oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | jq '.items[] | select(.kind==\"Route\") | .metadata.name' }}"
-        echo route name is $ROUTE_NAME
+        whereis oc
+        var=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=latest | jq '.items[] | select(.kind=="Route") | .metadata.name')
+        echo route name is $var
