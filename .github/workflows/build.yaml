@@ -95,7 +95,8 @@ jobs:
       id: deploy-dev
       run: |
         oc version
-        whereis oc
+        oc whoami
+        oc status       
         # commented out while debugging
         #oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | oc replace -n dbc-kirk-tools -f -
         #oc rollout status dc/bcdcsmk-dev-dc -n dbc-kirk-tools
