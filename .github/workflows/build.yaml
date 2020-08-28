@@ -7,7 +7,7 @@ name: BUILD Package
 # -------- DEBUGGING --------
 on:
   pull_request:
-    branches: ['master']
+    branches: ['master', 'dev']
     types: ['opened', 'reopened']
 
 jobs:
