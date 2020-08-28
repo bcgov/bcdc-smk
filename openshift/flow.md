@@ -50,3 +50,5 @@
 * [get commit and pr status](https://dev.to/gr2m/github-api-how-to-retrieve-the-combined-pull-request-status-from-commit-statuses-check-runs-and-github-action-results-2cen)
 
 * [catalog / list of actions](https://github.com/sdras/awesome-actions)
+
+* [trigger using curl](https://goobar.io/2019/12/07/manually-trigger-a-github-actions-workflow/)

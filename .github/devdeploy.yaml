@@ -3,7 +3,7 @@ name: "DEV Deploy"
 
 on:
   workflow_run:
-    workflows: ["BUILD Package", "build"]
+    workflows: ["BUILDPackage", "build"]
     types: 
       - completed
 
