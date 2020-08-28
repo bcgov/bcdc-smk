@@ -50,6 +50,7 @@ jobs:
         echo tag version is ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
         echo ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }} > docker_image_tag.txt
         echo ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }} > /github/home/docker_image_tag.txt
+        ls -la  /github/home
     - name: upload image tag
       id: uploadimagetag
       uses: actions/upload-artifact@v2
@@ -58,6 +59,7 @@ jobs:
         path: docker_image_tag.txt
 
     # -------- DEBUGGING uncomment when done --------
+
     # - name: Create the docker image
     #   uses: docker/build-push-action@v1
     #   with:
