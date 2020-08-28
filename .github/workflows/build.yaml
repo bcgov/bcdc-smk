@@ -82,7 +82,9 @@ jobs:
       run: |
         echo tag version is ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
         #pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+        
         issue_url=$(jq --raw-output .pull_request.issue_url "$GITHUB_EVENT_PATH")
+        echo issue url is $issue_url
 
         # ---- adding the tag that was assigned to the image to the issue ----
         jsonwithlabels=$(curl --header "Content-Type: application/json" \
