@@ -37,7 +37,6 @@ jobs:
     # PERFORM THE DEPLOY
     - name: deploy dev
       id: deploydev
-      description: ""
       run: |
         oc version
         oc whoami
@@ -80,7 +79,6 @@ jobs:
 
     - name: Update issue
       id: updateissue
-      description: ""
       run: |
         # add a comment for the issue associated with the pr that includes the 
         # path to the dev deploy of the app
