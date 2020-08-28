@@ -5,10 +5,15 @@ name: BUILD Package
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 # -------- DEBUGGING --------
-on:
-  pull_request:
-    branches: ['master', 'dev']
-    types: ['opened', 'reopened']
+on: 
+  push:
+    branches: ['dev']
+
+
+# on:
+#   pull_request:
+#     branches: ['master', 'dev']
+#     types: ['opened', 'reopened']
 
 jobs:
   # This workflow contains a single job called "build"
@@ -48,9 +53,9 @@ jobs:
       run: |
         echo tag version is ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
         echo ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }} > docker_image_tag.txt
-        echo ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }} > /github/home/docker_image_tag.txt
+        #echo ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }} > /github/home/docker_image_tag.txt
         ls -la  /github/home
-        
+
     - name: upload image tag
       id: uploadimagetag
       uses: actions/upload-artifact@v2
