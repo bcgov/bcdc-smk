@@ -82,7 +82,9 @@ jobs:
       run: |
         echo tag version is ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
         #pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-        
+        echo github event path: $GITHUB_EVENT_PATH
+        echo $GITHUB_WORKSPACE
+
         issue_url=$(jq --raw-output .pull_request.issue_url "$GITHUB_EVENT_PATH")
         echo issue url is $issue_url
 
