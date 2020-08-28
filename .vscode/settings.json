@@ -1,0 +1,6 @@
+{
+    "lineEndings.lfCharacter": "¬",
+    "editor.renderWhitespace": true,
+    "editor.renderControlCharacters": true,
+    "editor.renderIndentGuides": true
+}

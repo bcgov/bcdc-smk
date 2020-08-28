@@ -4,33 +4,106 @@ name: BUILD Package
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
+# -------- DEBUGGING --------
+# on:
+#   pull_request:
+#     branches: ['master']
+
 on:
-  pull_request:
-    branches: ['master']
+  push:
+    branches:    
+      - dev
 
 jobs:
-    # This workflow contains a single job called "build"
-    build:
-        # The type of runner that the job will run on
-        runs-on: ubuntu-latest
-        # Steps represent a sequence of tasks that will be executed as part of the job
-        steps:
-        # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-        - uses: actions/checkout@v2
-          with:
-            # Disabling shallow clone is recommended for improving relevancy of reporting
-            fetch-depth: 0
-        - name: Setting the env var with datetime tag
-          run: echo ::set-env name=DOCKER_VERSION_TAG::$(date +%Y%m%d-%H%M)
-        - name: Create the docker image
-          uses: docker/build-push-action@v1
-          with:
-            registry: docker.pkg.github.com
-            username: $GITHUB_ACTOR
-            password: ${{ secrets.GITHUB_TOKEN  }}
-            repository: bcgov/bcdc-smk/bcdc-smk
-            tag_with_ref: true
-            tag_with_sha: true
-            add_git_labels: true
-            tags: ${{ env.DOCKER_VERSION_TAG }}
-            push: true
+  # This workflow contains a single job called "build"
+  buildjob:
+    name: Build BCDC-SMK container image
+    # The type of runner that the job will run on
+    runs-on: ubuntu-18.04
+    outputs:
+      dockerversiontag: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+      id: checkout
+      with:
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+        # -------- DEBUGGING --------
+        # 
+        #ref: v2
+        fetch-depth: 0
+    - name: calculateImageTag
+      id: calculateImageTag
+      #run: echo ::set-output name=DOCKER_VERSION_TAG::$(date +%Y%m%d-%H%M)
+      run: echo ::set-output name=DOCKER_VERSION_TAG::20200821-1547
+      # outputs:
+      #   containerTag:
+      #     description: 'calculate the tag id'
+      #     value: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
+
+
+    - name: testing the output
+      id: testoutput
+      run: echo tag version is ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
+    
+    # -------- DEBUGGING uncomment when done --------
+    # - name: Create the docker image
+    #   uses: docker/build-push-action@v1
+    #   with:
+    #     registry: docker.pkg.github.com
+    #     username: $GITHUB_ACTOR
+    #     password: ${{ secrets.GITHUB_TOKEN  }}
+    #     repository: bcgov/bcdc-smk/bcdc-smk
+    #     tag_with_ref: true
+    #     tag_with_sha: true
+    #     add_git_labels: true
+    #     tags: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
+    #     push: true
+
+  # -------- DEBUGGING --------
+  # outputs syntax works apparently in GHA but not using ACT.
+  deployDev:
+    name: Deploy the image to delivery environment
+    needs: buildjob
+    defaults:
+      run:
+        shell: bash
+    runs-on: ubuntu-18.04
+    steps:
+    - id: getversiontag
+      # THIS WORKS ON GHA but not using ACT
+      run: |
+        echo image tag is ${{ needs.buildjob.outputs.dockerversiontag}}
+        echo "::set-env name=DOCKER_VERSION_TAG::${{ needs.buildjob.outputs.dockerversiontag}}"
+        echo testing set of env var: $DOCKER_VERSION_TAG
+    - id: printenv
+      run: echo testing set of env var in another step $DOCKER_VERSION_TAG
+
+    - uses: actions/checkout@v2
+      id: checkout
+      with:
+        fetch-depth: 0
+
+    - name: OpenShift Action
+      id: GHAOpenshiftTest
+      uses: redhat-developer/openshift-actions@v1.1
+      with:
+        version: '3.11.232'
+        openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
+        parameters: '{"apitoken": "${{ secrets.API_TOKEN }}", "acceptUntrustedCerts": "true"}'
+        cmd: 'version'
+
+
+    - name: deploy dev
+      id: deploydev
+      run: |
+        oc version
+        oc whoami
+        oc status
+        whereis oc
+        ROUTENAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=latest | jq '.items[] | select(.kind=="Route") | .metadata.name')
+        echo route name is $ROUTENAME
+
+        ROUTEPATH=$(oc get routes -n dbc-kirk-tools -o json | jq  '.items[] | select(.metadata.name=='$ROUTENAME') | .spec.host' | tr -d '"')
+
+        echo route is $ROUTEPATH

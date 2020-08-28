@@ -22,7 +22,8 @@ parameters:
     value: dbc-kirk-tools
   - name: "IMAGE_LABEL"
     description: "the label that identifies what image to deploy"
-    value: ":latest"
+    value: "latest"
+
 
 objects:
   - kind: "DeploymentConfig"
@@ -50,6 +51,7 @@ objects:
           maxUnavailable: 25%
           timeoutSeconds: 600
           updatePeriodSeconds: 1
+        
         type: Rolling
       template:
         metadata:
@@ -61,7 +63,7 @@ objects:
             deploymentconfig: ${NAME}-${ENV}-dc
         spec:
           containers:
-            - image: ${CONTAINER_SRC}${IMAGE_LABEL}
+            - image: "${CONTAINER_SRC}:${IMAGE_LABEL}"
               imagePullPolicy: IfNotPresent
               name: ${NAME}-${ENV}-app
               ports:
@@ -76,6 +78,16 @@ objects:
           restartPolicy: Always
           schedulerName: default-scheduler
           securityContext: {}
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
           readinessProbe:
             failureThreshold: 3
             httpGet:
@@ -110,7 +122,6 @@ objects:
         app: ${NAME}-${ENV}-app
         deploymentconfig: ${NAME}-${ENV}-dc
       sessionAffinity: None
-      type: ClusterIP
     
   - kind: Route
     apiVersion: v1
