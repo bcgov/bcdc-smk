@@ -54,7 +54,6 @@ jobs:
         echo tag version is ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
         echo ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }} > docker_image_tag.txt
         #echo ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }} > /github/home/docker_image_tag.txt
-        ls -la  /github/home
 
     - name: upload image tag
       id: uploadimagetag
