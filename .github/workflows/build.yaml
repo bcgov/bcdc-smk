@@ -80,7 +80,9 @@ jobs:
     - name: Tag the pull request with build tag
       id: tagpullrequest
       run: |
-        echo tag version is ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
+        DOCKER_VERSION_TAG=${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
+
+        echo tag version is $DOCKER_VERSION_TAG
         #pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
         echo github event path: $GITHUB_EVENT_PATH
         echo $GITHUB_WORKSPACE
