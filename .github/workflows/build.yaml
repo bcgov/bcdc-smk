@@ -77,36 +77,37 @@ jobs:
     #     tags: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
     #     push: true
 
-    - name: Tag the pull request with build tag
-      id: tagpullrequest
-      run: |
-        DOCKER_VERSION_TAG=${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
+    # -------- DEBUGGING uncomment when done --------
+      # - name: Tag the pull request with build tag
+      # id: tagpullrequest
+      # run: |
+      #   DOCKER_VERSION_TAG=${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
 
-        echo tag version is $DOCKER_VERSION_TAG
-        #pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-        echo github event path: $GITHUB_EVENT_PATH
-        echo $GITHUB_WORKSPACE
+      #   echo tag version is $DOCKER_VERSION_TAG
+      #   #pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+      #   echo github event path: $GITHUB_EVENT_PATH
+      #   echo $GITHUB_WORKSPACE
 
-        # use this for pulls
-        issue_url=$(jq --raw-output .pull_request.issue_url "$GITHUB_EVENT_PATH")
-        echo issue url is $issue_url
+      #   # use this for pulls
+      #   issue_url=$(jq --raw-output .pull_request.issue_url "$GITHUB_EVENT_PATH")
+      #   echo issue url is $issue_url
 
-        # for debugging using existing pull_request
-        if [ -z "$issue_url" ] || [ "$issue_url" = "null" ]
-          then
-            issue_url="https://api.github.com/repos/bcgov/bcdc-smk/issues/19"
-        fi
+      #   # for debugging using existing pull_request
+      #   if [ -z "$issue_url" ] || [ "$issue_url" = "null" ]
+      #     then
+      #       issue_url="https://api.github.com/repos/bcgov/bcdc-smk/issues/19"
+      #   fi
 
 
-        # ---- adding the tag that was assigned to the image to the issue ----
-        jsonwithlabels=$(curl --header "Content-Type: application/json" \
-        --header "authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-        --request GET \
-        $issue_url | jq '.labels |= . + ["'$DOCKER_VERSION_TAG'"] | {("labels"): .["labels"]?}')
+      #   # ---- adding the tag that was assigned to the image to the issue ----
+      #   jsonwithlabels=$(curl --header "Content-Type: application/json" \
+      #   --header "authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+      #   --request GET \
+      #   $issue_url | jq '.labels |= . + ["'$DOCKER_VERSION_TAG'"] | {("labels"): .["labels"]?}')
         
-        # now send modified json back to the api with the new label
-        curl \
-        --location --request POST $issue_url \
-        --header "Content-Type: application/json" \
-        --header "authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-        --data "$jsonwithlabels"
+      #   # now send modified json back to the api with the new label
+      #   curl \
+      #   --location --request POST $issue_url \
+      #   --header "Content-Type: application/json" \
+      #   --header "authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+      #   --data "$jsonwithlabels"

@@ -1,13 +1,12 @@
 
-
 name: "DEV Deploy"
 
 on:
   workflow_run:
     workflows: ["BUILD Package"]
-    branches: [dev]
     types: 
       - completed
+
 jobs:
   deploydev:
     defaults:
