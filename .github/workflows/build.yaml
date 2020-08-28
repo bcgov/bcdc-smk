@@ -45,7 +45,7 @@ jobs:
 
     - name: output the docker image tag
       id: testoutput
-      description: uploading the image tag so it easily available to subsequent workflows
+      description: 'uploading the image tag so it easily available to subsequent workflows'
       run: |
         echo tag version is ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
         echo ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }} > docker_image_tag.txt
