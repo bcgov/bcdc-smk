@@ -22,7 +22,7 @@ jobs:
         ls -l  /github/home
         echo tag version $(cat < /github/home/docker_image_tag.txt)
         IMAGE_TAG=$(cat < /github/home/docker_image_tag.txt)
-        echo "::set-env name=DOCKER_VERSION_TAG::${{ $IMAGE_TAG }}"
+        echo "::set-env name=DOCKER_VERSION_TAG::$IMAGE_TAG"
         echo testing set of env var: $DOCKER_VERSION_TAG
     # LOGGING INTO OC
     - name: OpenShift Action
