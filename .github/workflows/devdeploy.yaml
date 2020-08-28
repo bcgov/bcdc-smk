@@ -19,9 +19,9 @@ jobs:
       id: retrieveimagetag
       run: |
         export
-        ls -l  /github/home
-        echo tag version $(cat < /github/home/docker_image_tag.txt)
-        IMAGE_TAG=$(cat < /github/home/docker_image_tag.txt)
+        ls -l
+        echo tag version $(cat < docker_image_tag.txt)
+        IMAGE_TAG=$(cat < docker_image_tag.txt)
         echo "::set-env name=DOCKER_VERSION_TAG::$IMAGE_TAG"
         echo testing set of env var: $DOCKER_VERSION_TAG
     # LOGGING INTO OC
