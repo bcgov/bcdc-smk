@@ -78,15 +78,15 @@ jobs:
         # ------------------- SET THE ROUTEPATH ouptut
         run: echo ::set-output name=ROUTEPATH::$(ROUTEPATH)
 
-      - name: Update issue
-        id: updateissue
-        description: ""
-        run: |
-          # add a comment for the issue associated with the pr that includes the 
-          # path to the dev deploy of the app
-          #
-          # possibly also do a 'request' for reviews to someone defined in an env 
-          # var somewhere
-          # change the status of the pull request to "review required"
-          echo "not implemented yet"
+    - name: Update issue
+      id: updateissue
+      description: ""
+      run: |
+        # add a comment for the issue associated with the pr that includes the 
+        # path to the dev deploy of the app
+        #
+        # possibly also do a 'request' for reviews to someone defined in an env 
+        # var somewhere
+        # change the status of the pull request to "review required"
+        echo "not implemented yet"
   
