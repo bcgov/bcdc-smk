@@ -90,7 +90,7 @@ jobs:
         echo issue url is $issue_url
 
         # for debugging using existing pull_request
-        if [ -z "$issue_url" ]
+        if [ -z "$issue_url" ] || [ "$issue_url" = "null" ]
           then
             issue_url="https://api.github.com/repos/bcgov/bcdc-smk/issues/19"
         fi
