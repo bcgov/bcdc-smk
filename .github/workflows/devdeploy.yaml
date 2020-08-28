@@ -19,6 +19,17 @@ jobs:
       id: retrieveimagetag
       run: |
         export
+
+        cat < $GITHUB_EVENT_PATH | echo
+
+        artifactsUrl="${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/artifacts"
+
+
+        # - going to get tag from the artifacts
+        curl --location --request GET $artifactsUrl \
+        --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}'
+
+
         ls -l
         echo tag version $(cat < docker_image_tag.txt)
         IMAGE_TAG=$(cat < docker_image_tag.txt)
