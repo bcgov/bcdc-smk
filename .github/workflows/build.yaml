@@ -42,15 +42,15 @@ jobs:
       #     description: 'calculate the tag id'
       #     value: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
 
-
+    # --------- UPLOAD the DOCKER IMAGE -------
     - name: output the docker image tag
       id: testoutput
-      description: 'uploading the image tag so it easily available to subsequent workflows'
       run: |
         echo tag version is ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
         echo ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }} > docker_image_tag.txt
         echo ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }} > /github/home/docker_image_tag.txt
         ls -la  /github/home
+        
     - name: upload image tag
       id: uploadimagetag
       uses: actions/upload-artifact@v2
