@@ -43,7 +43,7 @@ jobs:
       #run: echo ::set-output name=DOCKER_VERSION_TAG::$(date +%Y%m%d-%H%M)
       run: echo ::set-output name=DOCKER_VERSION_TAG::20200821-1547
       # outputs:
-      #   containerTag:
+      #   containerTag: 
       #     description: 'calculate the tag id'
       #     value: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
 
