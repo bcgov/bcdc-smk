@@ -108,3 +108,4 @@ openshift/jenkins_etltools_deployconfig.yaml
 openshift/jenkins_bcdctools_deployconfig.yaml
 openshift/junk.yaml
 openshift/tmp
+docker_image_tag.txt
