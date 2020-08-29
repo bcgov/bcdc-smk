@@ -26,7 +26,7 @@ jobs:
         artifactsUrl="${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/artifacts"
         echo artifacts url is $artifactsUrl
         artifactDlUrl=$(curl --location --request GET $artifactsUrl \
-        --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' | jq '.artifacts[0].archive_download_url') | tr -d '"'
+        --header "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" | jq '.artifacts[0].archive_download_url') | tr -d '"'
         echo  artifact download link is $artifactDlUrl
         curl --location --request GET $artifactDlUrl --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' --data-raw '' --output arty.zip
         echo downloaded artifact arty.zip
