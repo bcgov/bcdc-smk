@@ -20,19 +20,20 @@ jobs:
       run: |
         export
 
-        cat < $GITHUB_EVENT_PATH | echo
+        cat < $GITHUB_EVENT_PATH
+
 
         artifactsUrl="${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/artifacts"
+        artifactDlUrl=$(curl --location --request GET $artifactsUrl \
+        --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' | jq '.artifacts[0].archive_download_url') | tr -d '"'
+        curl --location --request GET $artifactDlUrl --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' --data-raw '' --output arty.zip
+        unzip arty.zip
+        IMAGE_TAG=$(cat docker_image_tag.txt)
+        rm docker_image_tag.txt
+        rm arty.zip
+        
+        echo "::set-env name=DOCKER_VERSION_TAG::$IMAGE_TAG"
 
-
-        # - going to get tag from the artifacts
-        curl --location --request GET $artifactsUrl \
-        --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}'
-
-
-        ls -l
-        echo tag version $(cat < docker_image_tag.txt)
-        IMAGE_TAG=$(cat < docker_image_tag.txt)
         echo "::set-env name=DOCKER_VERSION_TAG::$IMAGE_TAG"
         echo testing set of env var: $DOCKER_VERSION_TAG
     # LOGGING INTO OC
