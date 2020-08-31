@@ -1,11 +1,17 @@
 
 name: "DEV Deploy"
 
-on:
-  workflow_run:
-    workflows: ["BUILDPackage", "build"]
-    types: 
-      - completed
+#TODO: once working change the event the action is associated to the one below
+# on:
+#   workflow_run:
+#     workflows: ["BUILDPackage", "build"]
+#     types: 
+#       - completed
+
+on: 
+  push:
+    branches: ['dev']
+
 
 jobs:
   deploydev:
