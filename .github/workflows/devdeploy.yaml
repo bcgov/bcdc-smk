@@ -92,7 +92,8 @@ jobs:
         SERVICENAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG  | jq '.items[] | select(.kind=="Service") | .metadata.name')
         
         # ------------------- delete objects if they exist -------------------
-        EXISTINGDEPLOYNAME=$(oc get deploymentconfigs -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=='$DEPLOYNAME') | .metadata.name')
+        echo deploy name is $DEPLOYNAME
+        EXISTINGDEPLOYNAME=$(oc get deploymentconfigs -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=='"'"$DEPLOYNAME"'"') | .metadata.name')
         if [ ! -z "$EXISTINGDEPLOYNAME" ]
         then
           oc delete deploymentconfig $EXISTINGDEPLOYNAME
