@@ -97,7 +97,8 @@ jobs:
         then
           oc delete deploymentconfig $EXISTINGDEPLOYNAME
         fi
-        EXISTINGROUTENAME=$(oc get routes -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=='$ROUTENAME') | .metadata.name')
+        echo route name is $ROUTENAME
+        EXISTINGROUTENAME=$(oc get routes -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=='"'"$ROUTENAME"'""'') | .metadata.name')
         if [ ! -z "$EXISTINGROUTENAME" ]
         then
           oc delete route $EXISTINGROUTENAME
