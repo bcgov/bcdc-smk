@@ -14,35 +14,45 @@ jobs:
         shell: bash
     # RETRIEVE IMAGE TAGS
     runs-on: ubuntu-18.04
+    outputs:
+      dockerversiontag: ${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }}
     steps:
+    # Checking out code to get access to the openshift deploy template later on
+    # could also reference the github url?
+    - uses: actions/checkout@v2
+      id: checkout
+      with:
+        fetch-depth: 0
+
+
     - name: Retrieve image tag
       id: retrieveimagetag
       run: |
-        export
-
-        #cat < $GITHUB_EVENT_PATH
-
-        
+        --- set the artifacts url
         artifactsUrl="${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/artifacts"
         echo artifacts url is $artifactsUrl
 
-        curl --location  \
-        --header "authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" --request GET $artifactsUrl
-
+        # --- get the last artifacts download url
         artifactDlUrl=$(curl --location --header "authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" --request GET $artifactsUrl | jq '.artifacts[0].archive_download_url' | tr -d '"')
         echo  artifact download link is $artifactDlUrl
+        
+        # --- download the last artifact and unzip it
         curl --location --request GET $artifactDlUrl --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' --data-raw '' --output arty.zip
         echo downloaded artifact arty.zip
         unzip arty.zip
+
+        # -- populate the env var IMAGE_TAG
         IMAGE_TAG=$(cat docker_image_tag.txt)
         echo image tag is $IMAGE_TAG
+        echo ::set-output name=DOCKER_VERSION_TAG::$IMAGE_TAG
+
+        #echo "::set-env name=DOCKER_VERSION_TAG::$IMAGE_TAG"
+        echo testing set of env var: ${{ env.DOCKER_VERSION_TAG }}
+
+        # Clean up the downloaded artifact
         rm docker_image_tag.txt
         rm arty.zip
         
-        echo "::set-env name=DOCKER_VERSION_TAG::$IMAGE_TAG"
-
-        echo "::set-env name=DOCKER_VERSION_TAG::$IMAGE_TAG"
-        echo testing set of env var: ${{ env.DOCKER_VERSION_TAG }}
     # LOGGING INTO OC
     - name: OpenShift Action
       id: GHAOpenshiftTest
@@ -62,6 +72,7 @@ jobs:
         oc status
         whereis oc
 
+        #TODO: parameterize this in an env var
         DEPLOY_NAMESPACE=dbc-kirk-dev
 
         # ------------------- extract the object names from the template -------------------
