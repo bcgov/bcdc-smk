@@ -12,7 +12,6 @@ on:
   push:
     branches: ['dev']
 
-
 jobs:
   deploydev:
     defaults:
@@ -66,7 +65,7 @@ jobs:
       with:
         version: '3.11.232'
         openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
-        parameters: '{"apitoken": "${{ secrets.API_TOKEN }}", "acceptUntrustedCerts": "true"}'
+        parameters: '{"apitoken": "${{ secrets.OPENSHIFT_TOKEN_DEV }}", "acceptUntrustedCerts": "true"}'
         cmd: 'version'
      
     # PERFORM THE DEPLOY
@@ -78,8 +77,14 @@ jobs:
         oc status
         whereis oc
 
+        #TODO:
+        # need to create a service account in the namespace defined for this 
+        # deploy, also want to define the role for that service account, and
+        # put it all in a TEMPLATE
+
         #TODO: parameterize this in an env var
-        DEPLOY_NAMESPACE=dbc-kirk-dev
+        DEPLOY_NAMESPACE=${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
+        echo deploy namespace is $DEPLOY_NAMESPACE
 
         # ------------------- extract the object names from the template -------------------
         ROUTENAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | jq '.items[] | select(.kind=="Route") | .metadata.name')
@@ -107,7 +112,7 @@ jobs:
         oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG -p DEPLOY_NAMESPACE=$DEPLOY_NAMESPACE | oc create -n $DEPLOY_NAMESPACE -f - 
 
         echo route name is $ROUTENAME
-        ROUTEPATH=$(oc get routes -n dbc-kirk-tools -o json | jq  '.items[] | select(.metadata.name=='$ROUTENAME') | .spec.host' | tr -d '"')
+        ROUTEPATH=$(oc get routes -n $OPENSHIFT_DEV_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=='$ROUTENAME') | .spec.host' | tr -d '"')
         echo route is 'https://'$ROUTEPATH
 
         # ------------------- SET THE ROUTEPATH ouptut

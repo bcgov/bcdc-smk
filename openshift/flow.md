@@ -1,5 +1,74 @@
 # Overview of CD/CI for this repo
 
+## Repository INIT
+
+Before anything can be run in a repository it needs to have the following
+objects defined:
+
+* gha-deploy-sa (service account)
+* gha-imagepull-secret (image pull secret)
+
+Below goes over the details of setting these up.
+
+### Configure *gha-deploy-sa* secret
+
+Configure a personal access token for a user that has WRITE access to the 
+repository:  https://github.com/bcgov/bcdc-smk
+
+Make sure the user access token has the following permissions:
+* write:packages 
+* read:packages
+* Full control of private repositories
+
+Create a Secret in the target openshift project space
+* type: Image Secret
+* secret name: bcdcsmk-image-secret
+* Authentication: Image Registry Credentials
+* Image Registry Server Address: docker.pkg.github.com/bcgov/bcdc-smk/bcdc-smk
+
+
+Create a service account 
+
+`oc create sa gha-deploy-sa`
+
+Assign the service account the **edit** role
+
+```
+OC_NAMESPACE=<enter name space to create secret in>
+oc project $OC_NAMESPACE
+oc policy add-role-to-user edit "system:serviceaccount:$OC_NAMESPACE:gha-deploy-sa"
+```
+
+Get the service account secret
+* go to secrets
+* find a secret that is prefixed by the name of the service account that was just created
+* choose the second of the two, reveal secrets and grab the secrets token
+
+Test the secret
+
+```
+SA_SECRET=<paste secret into env var>
+oc login --token $SA_SECRET
+```
+
+if successful, then
+`oc projects` should return at least one project
+`oc whoami` should tell you the name of the service account that you logged in as 
+
+
+Enter service account api key and add as secret to Github
+
+* go to github repo
+* select settings->secrets
+* enter the secret, 
+    * OPENSHIFT_TOKEN_DEV - name of secret for account tied to dev deploy
+    * OPENSHIFT_TOKEN_PROD - name of secret for account tied to prod deploy 
+
+
+
+
+
+
 ## Pull Request to Master
 
 * Triggers the GITHUB workflow 'BUILD' which creates a container image
