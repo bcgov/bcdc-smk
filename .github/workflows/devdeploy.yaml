@@ -35,13 +35,14 @@ jobs:
         echo downloaded artifact arty.zip
         unzip arty.zip
         IMAGE_TAG=$(cat docker_image_tag.txt)
+        echo image tag is $IMAGE_TAG
         rm docker_image_tag.txt
         rm arty.zip
         
         echo "::set-env name=DOCKER_VERSION_TAG::$IMAGE_TAG"
 
         echo "::set-env name=DOCKER_VERSION_TAG::$IMAGE_TAG"
-        echo testing set of env var: $DOCKER_VERSION_TAG
+        echo testing set of env var: ${{ env.DOCKER_VERSION_TAG }}
     # LOGGING INTO OC
     - name: OpenShift Action
       id: GHAOpenshiftTest
