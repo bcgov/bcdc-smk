@@ -99,10 +99,11 @@ jobs:
         echo servicename $SERVICENAME
 
         # ------------------- delete objects if they exist -------------------
-        echo deploy name is $DEPLOYNAME
         EXISTINGDEPLOYNAME=$(oc get deploymentconfigs -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$DEPLOYNAME'") | .metadata.name')
+        echo existing deploy name $EXISTINGDEPLOYNAME
         if [ ! -z "$EXISTINGDEPLOYNAME" ]
         then
+          echo deleting $EXISTINGDEPLOYNAME
           oc delete deploymentconfig $EXISTINGDEPLOYNAME
         fi
         echo route name is $ROUTENAME
