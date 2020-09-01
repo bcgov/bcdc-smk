@@ -85,12 +85,19 @@ jobs:
         #TODO: parameterize this in an env var
         DEPLOY_NAMESPACE=${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
         echo deploy namespace is $DEPLOY_NAMESPACE
+        echo docker tag $DOCKER_VERSION_TAG
+
+        echo tag version is ${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }}
+
 
         # ------------------- extract the object names from the template -------------------
         ROUTENAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | jq '.items[] | select(.kind=="Route") | .metadata.name')
         DEPLOYNAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG  | jq '.items[] | select(.kind=="DeploymentConfig") | .metadata.name')
         SERVICENAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG  | jq '.items[] | select(.kind=="Service") | .metadata.name')
-        
+        echo routename $ROUTENAME
+        echo depoloyname $DEPLOYNAME
+        echo servicename $SERVICENAME
+
         # ------------------- delete objects if they exist -------------------
         echo deploy name is $DEPLOYNAME
         EXISTINGDEPLOYNAME=$(oc get deploymentconfigs -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$DEPLOYNAME'") | .metadata.name')
