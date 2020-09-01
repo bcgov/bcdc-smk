@@ -115,7 +115,7 @@ jobs:
         EXISTINGSERVICENAME=$(oc get services -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$SERVICENAME'") | .metadata.name' | tr -d '"')
         if [ ! -z "$EXISTINGSERVICENAME" ]
         then
-          oc delete route $EXISTINGSERVICENAME
+          oc delete service $EXISTINGSERVICENAME
         fi
 
         # ------------------- NOW CREATE THE OBJECTS -------------------
