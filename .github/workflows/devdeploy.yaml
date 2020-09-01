@@ -21,6 +21,7 @@ jobs:
     runs-on: ubuntu-18.04
     outputs:
       dockerversiontag: ${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }}
+      routepath: ${{ steps.deploydev.outputs.ROUTEPATH }}
     steps:
     # Checking out code to get access to the openshift deploy template later on
     # could also reference the github url?
@@ -113,6 +114,7 @@ jobs:
           oc delete route $EXISTINGROUTENAME
         fi
         EXISTINGSERVICENAME=$(oc get services -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$SERVICENAME'") | .metadata.name' | tr -d '"')
+        echo service name is $EXISTINGSERVICENAME
         if [ ! -z "$EXISTINGSERVICENAME" ]
         then
           oc delete service $EXISTINGSERVICENAME
@@ -123,7 +125,7 @@ jobs:
 
         echo route name is $ROUTENAME
         # ---- get the path associated with the route
-        ROUTEPATH=$(oc get routes -n $OPENSHIFT_DEV_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$ROUTENAME'") | .spec.host' | tr -d '"')
+        ROUTEPATH=$(oc get routes -n ${{ secrets.OPENSHIFT_DEV_NAMESPACE }} -o json | jq  '.items[] | select(.metadata.name=="'$ROUTENAME'") | .spec.host' | tr -d '"')
         echo route is 'https://'$ROUTEPATH
 
         # ------------------- SET THE ROUTEPATH ouptut

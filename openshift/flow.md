@@ -42,7 +42,10 @@ oc policy add-role-to-user edit "system:serviceaccount:$OC_NAMESPACE:gha-deploy-
 Append permissions to the role to view depolyments, services, routes
 
 Create the role:
-`oc create role ghadeploy-role --verb=get,list --resource=deploymentconfigs.apps.openshift.io -n $OC_NAMESPACE`
+`oc create role ghadeploy-role --verb=get,list --resource=deploymentconfigs.apps.openshift.io,routes.route.openshift.io -n $OC_NAMESPACE`
+
+
+
 
 Add the role to the service account
 `oc policy add-role-to-user ghadeploy-role gha-depoloy-sa --role-namespace=$OC_NAMESPACE -n $OC_NAMESPACE`
