@@ -30,10 +30,12 @@ jobs:
       with:
         fetch-depth: 0
 
-
+      # RETRIEVE THE IMAGE TAG
     - name: Retrieve image tag
       id: retrieveimagetag
       run: |
+        #--------------------------------------------------------
+        #
         #--- set the artifacts url
         artifactsUrl="${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/artifacts"
         echo artifacts url is $artifactsUrl
@@ -131,6 +133,7 @@ jobs:
         # ------------------- SET THE ROUTEPATH ouptut
         echo ::set-output name=ROUTEPATH::$ROUTEPATH
 
+    # ADD THE ROUTE TO THE ISSUE
     - name: Update issue
       id: updateissue
       run: |
@@ -142,6 +145,7 @@ jobs:
         # change the status of the pull request to "review required"
         echo "not implemented yet"
         echo route path is ${{ steps.deploydev.outputs.ROUTEPATH }}
+        cat $GITHUB_EVENT_PATH
 
 
 
