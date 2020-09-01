@@ -91,9 +91,9 @@ jobs:
 
 
         # ------------------- extract the object names from the template -------------------
-        ROUTENAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | jq '.items[] | select(.kind=="Route") | .metadata.name')
-        DEPLOYNAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG  | jq '.items[] | select(.kind=="DeploymentConfig") | .metadata.name')
-        SERVICENAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG  | jq '.items[] | select(.kind=="Service") | .metadata.name')
+        ROUTENAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | jq '.items[] | select(.kind=="Route") | .metadata.name' | tr -d '"')
+        DEPLOYNAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG  | jq '.items[] | select(.kind=="DeploymentConfig") | .metadata.name'| tr -d '"')
+        SERVICENAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG  | jq '.items[] | select(.kind=="Service") | .metadata.name' | tr -d '"')
         echo routename $ROUTENAME
         echo depoloyname $DEPLOYNAME
         echo servicename $SERVICENAME
