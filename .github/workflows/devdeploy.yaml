@@ -129,7 +129,7 @@ jobs:
         echo route is 'https://'$ROUTEPATH
 
         # ------------------- SET THE ROUTEPATH ouptut
-        run: echo ::set-output name=ROUTEPATH::$(ROUTEPATH)
+        echo ::set-output name=ROUTEPATH::$ROUTEPATH
 
     - name: Update issue
       id: updateissue
@@ -141,6 +141,7 @@ jobs:
         # var somewhere
         # change the status of the pull request to "review required"
         echo "not implemented yet"
+        echo route path is ${{ steps.deploydev.outputs.ROUTEPATH }}
 
 
 
