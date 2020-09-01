@@ -39,6 +39,15 @@ oc project $OC_NAMESPACE
 oc policy add-role-to-user edit "system:serviceaccount:$OC_NAMESPACE:gha-deploy-sa"
 ```
 
+Append permissions to the role to view depolyments, services, routes
+
+Create the role:
+`oc create role ghadeploy-role --verb=get,list --resource=deploymentconfigs.apps.openshift.io -n $OC_NAMESPACE`
+
+Add the role to the service account
+`oc policy add-role-to-user ghadeploy-role gha-depoloy-sa --role-namespace=$OC_NAMESPACE -n $OC_NAMESPACE`
+
+
 Get the service account secret
 * go to secrets
 * find a secret that is prefixed by the name of the service account that was just created

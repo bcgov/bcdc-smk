@@ -93,18 +93,18 @@ jobs:
         
         # ------------------- delete objects if they exist -------------------
         echo deploy name is $DEPLOYNAME
-        EXISTINGDEPLOYNAME=$(oc get deploymentconfigs -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=='"'"$DEPLOYNAME"'"') | .metadata.name')
+        EXISTINGDEPLOYNAME=$(oc get deploymentconfigs -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$DEPLOYNAME'") | .metadata.name')
         if [ ! -z "$EXISTINGDEPLOYNAME" ]
         then
           oc delete deploymentconfig $EXISTINGDEPLOYNAME
         fi
         echo route name is $ROUTENAME
-        EXISTINGROUTENAME=$(oc get routes -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=='"'"$ROUTENAME"'""'') | .metadata.name')
+        EXISTINGROUTENAME=$(oc get routes -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$ROUTENAME'") | .metadata.name')
         if [ ! -z "$EXISTINGROUTENAME" ]
         then
           oc delete route $EXISTINGROUTENAME
         fi
-        EXISTINGSERVICENAME=$(oc get deploymentconfigs -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=='$SERVICENAME') | .metadata.name')
+        EXISTINGSERVICENAME=$(oc get services -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$SERVICENAME'") | .metadata.name')
         if [ ! -z "$EXISTINGSERVICENAME" ]
         then
           oc delete route $EXISTINGSERVICENAME
@@ -114,7 +114,8 @@ jobs:
         oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG -p DEPLOY_NAMESPACE=$DEPLOY_NAMESPACE | oc create -n $DEPLOY_NAMESPACE -f - 
 
         echo route name is $ROUTENAME
-        ROUTEPATH=$(oc get routes -n $OPENSHIFT_DEV_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=='$ROUTENAME') | .spec.host' | tr -d '"')
+        # ---- get the path associated with the route
+        ROUTEPATH=$(oc get routes -n $OPENSHIFT_DEV_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$ROUTENAME'") | .spec.host' | tr -d '"')
         echo route is 'https://'$ROUTEPATH
 
         # ------------------- SET THE ROUTEPATH ouptut
@@ -130,4 +131,8 @@ jobs:
         # var somewhere
         # change the status of the pull request to "review required"
         echo "not implemented yet"
-  
+
+
+
+
+
