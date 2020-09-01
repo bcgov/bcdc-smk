@@ -99,7 +99,7 @@ jobs:
         echo servicename $SERVICENAME
 
         # ------------------- delete objects if they exist -------------------
-        EXISTINGDEPLOYNAME=$(oc get deploymentconfigs -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$DEPLOYNAME'") | .metadata.name')
+        EXISTINGDEPLOYNAME=$(oc get deploymentconfigs -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$DEPLOYNAME'") | .metadata.name' | tr -d '"')
         echo existing deploy name $EXISTINGDEPLOYNAME
         if [ ! -z "$EXISTINGDEPLOYNAME" ]
         then
@@ -107,12 +107,12 @@ jobs:
           oc delete deploymentconfig $EXISTINGDEPLOYNAME
         fi
         echo route name is $ROUTENAME
-        EXISTINGROUTENAME=$(oc get routes -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$ROUTENAME'") | .metadata.name')
+        EXISTINGROUTENAME=$(oc get routes -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$ROUTENAME'") | .metadata.name' | tr -d '"')
         if [ ! -z "$EXISTINGROUTENAME" ]
         then
           oc delete route $EXISTINGROUTENAME
         fi
-        EXISTINGSERVICENAME=$(oc get services -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$SERVICENAME'") | .metadata.name')
+        EXISTINGSERVICENAME=$(oc get services -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$SERVICENAME'") | .metadata.name' | tr -d '"')
         if [ ! -z "$EXISTINGSERVICENAME" ]
         then
           oc delete route $EXISTINGSERVICENAME
