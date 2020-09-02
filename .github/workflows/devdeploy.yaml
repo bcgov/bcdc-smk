@@ -140,15 +140,10 @@ jobs:
     - name: Update issue
       id: updateissue
       run: |
-        # add a comment for the issue associated with the pr that includes the 
-        # path to the dev deploy of the app
-        #
-        # possibly also do a 'request' for reviews to someone defined in an env 
-        # var somewhere
-        # change the status of the pull request to "review required"
-        echo "not implemented yet"
-        echo route path is ${{ steps.deploydev.outputs.ROUTEPATH }}
-        #cat $GITHUB_EVENT_PATH
+        # --- DEBUGGING ---
+        #ROUTEPATH=${{ steps.deploydev.outputs.ROUTEPATH }}
+        ROUTEPATH="https://example.com"
+        echo route path is $ROUTEPATH
 
         # GET THE ISSUE URL
         issue_url=$(jq --raw-output .pull_request.issue_url "$GITHUB_EVENT_PATH")
@@ -157,8 +152,10 @@ jobs:
           then
             issue_url="https://api.github.com/repos/bcgov/bcdc-smk/issues/19/comments"
         fi
+        echo issue url $issue_url
 
         # ADD COMMENT TO THE ISSUE
+        echo 'adding route to the comment for the issue'
         GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
         ISSUE_COMMENT="link to demo deployment of app\n ${{ steps.deploydev.outputs.ROUTEPATH }}"
         ISSUE_BODY='{"body": "'$ISSUE_COMMENT'"}'
