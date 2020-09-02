@@ -133,6 +133,8 @@ jobs:
         # ------------------- SET THE ROUTEPATH ouptut
         echo ::set-output name=ROUTEPATH::$ROUTEPATH
 
+    # ADD A DEPLOY MONITOR STEP TO MAKE SURE IT WAS SUCCESSFUL
+
     # ADD THE ROUTE TO THE ISSUE
     - name: Update issue
       id: updateissue
@@ -154,8 +156,16 @@ jobs:
             issue_url="https://api.github.com/repos/bcgov/bcdc-smk/issues/19"
         fi
 
-        # add the route to the issue url:
-        
+        # add the route to the issue url
+        curl -X POST -H "Accept: application/vnd.github.v3+json" \
+          --header "authorization: Bearer $GITHUB_TOKEN" \
+        https://api.github.com/repos/bcgov/bcdc-smk/issues/19/comments \
+        -d '{"body":"testing add comment"}'
+
+        ISSUE_COMMENT="link to demo deployment of app\n ${{ steps.deploydev.outputs.ROUTEPATH }}"
+        curl -X POST --location --header "authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          --header "Accept: application/vnd.github.v3+json" \
+          $issue_url -d '{"body":"'$ISSUE_COMMENT'"}'
 
 
     # REQUEST A REVIEW
