@@ -84,7 +84,6 @@ Finally now we will give the service account access to the image pull secret
 
 `oc secrets link gha-deploy-sa bcdcsmk-image-secret --for=pull`
 
-
 # Summary of flow
 
 ## Pull Request to Master
