@@ -123,7 +123,7 @@ jobs:
         fi
 
         # ------------------- NOW CREATE THE OBJECTS -------------------
-        oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG -p DEPLOY_NAMESPACE=$DEPLOY_NAMESPACE | oc create -n $DEPLOY_NAMESPACE -f - 
+        oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }} -p DEPLOY_NAMESPACE=$DEPLOY_NAMESPACE | oc create -n $DEPLOY_NAMESPACE -f - 
 
         echo route name is $ROUTENAME
         # ---- get the path associated with the route
