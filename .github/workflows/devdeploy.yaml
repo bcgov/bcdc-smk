@@ -147,8 +147,9 @@ jobs:
         # change the status of the pull request to "review required"
         echo "not implemented yet"
         echo route path is ${{ steps.deploydev.outputs.ROUTEPATH }}
-        cat $GITHUB_EVENT_PATH
+        #cat $GITHUB_EVENT_PATH
 
+        # GET THE ISSUE URL
         issue_url=$(jq --raw-output .pull_request.issue_url "$GITHUB_EVENT_PATH")
         # for debugging using existing pull_request
         if [ -z "$issue_url" ] || [ "$issue_url" = "null" ]
@@ -156,14 +157,10 @@ jobs:
             issue_url="https://api.github.com/repos/bcgov/bcdc-smk/issues/19"
         fi
 
-        # add the route to the issue url
-        curl -X POST -H "Accept: application/vnd.github.v3+json" \
-          --header "authorization: Bearer $GITHUB_TOKEN" \
-        https://api.github.com/repos/bcgov/bcdc-smk/issues/19/comments \
-        -d '{"body":"testing add comment"}'
 
+        # ADD COMMENT TO THE ISSUE
         ISSUE_COMMENT="link to demo deployment of app\n ${{ steps.deploydev.outputs.ROUTEPATH }}"
-        curl -X POST --location --header "authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+        curl -X POST --location --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
           --header "Accept: application/vnd.github.v3+json" \
           $issue_url -d '{"body":"'$ISSUE_COMMENT'"}'
 
