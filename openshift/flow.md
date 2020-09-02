@@ -12,26 +12,26 @@ Below goes over the details of setting these up.
 
 ### Configure *gha-deploy-sa* secret
 
-Configure a personal access token for a user that has WRITE access to the 
+#### Configure a personal access token for a user that has WRITE access to the 
 repository:  https://github.com/bcgov/bcdc-smk
 
-Make sure the user access token has the following permissions:
+#### Make sure the user access token has the following permissions:
 * write:packages 
 * read:packages
 * Full control of private repositories
 
-Create a Secret in the target openshift project space
+#### Create a Secret in the target openshift project space
 * type: Image Secret
 * secret name: bcdcsmk-image-secret
 * Authentication: Image Registry Credentials
 * Image Registry Server Address: docker.pkg.github.com/bcgov/bcdc-smk/bcdc-smk
 
 
-Create a service account 
+#### Create a service account 
 
 `oc create sa gha-deploy-sa`
 
-Assign the service account the **edit** role
+#### Assign the service account the **edit** role
 
 ```
 OC_NAMESPACE=<enter name space to create secret in>
@@ -39,19 +39,16 @@ oc project $OC_NAMESPACE
 oc policy add-role-to-user edit "system:serviceaccount:$OC_NAMESPACE:gha-deploy-sa"
 ```
 
-Append permissions to the role to view depolyments, services, routes
+#### Append permissions to the role to view depolyments, services, routes
 
 Create the role:
 `oc create role ghadeploy-role --verb=get,list --resource=deploymentconfigs.apps.openshift.io,routes.route.openshift.io -n $OC_NAMESPACE`
-
-
-
 
 Add the role to the service account
 `oc policy add-role-to-user ghadeploy-role gha-depoloy-sa --role-namespace=$OC_NAMESPACE -n $OC_NAMESPACE`
 
 
-Get the service account secret
+#### Get the service account secret
 * go to secrets
 * find a secret that is prefixed by the name of the service account that was just created
 * choose the second of the two, reveal secrets and grab the secrets token
@@ -77,9 +74,18 @@ Enter service account api key and add as secret to Github
     * OPENSHIFT_TOKEN_PROD - name of secret for account tied to prod deploy 
 
 
+#### Allow service account access to the image pull secret
+
+Summary of what has been done already:
+* Created the service account: **gha-deploy-sa**
+* Created the image pull secret: **bcdcsmk-image-secret**
+
+Finally now we will give the service account access to the image pull secret
+
+`oc secrets link gha-deploy-sa bcdcsmk-image-secret --for=pull`
 
 
-
+# Summary of flow
 
 ## Pull Request to Master
 
