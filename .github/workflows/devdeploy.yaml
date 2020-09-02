@@ -71,67 +71,68 @@ jobs:
         parameters: '{"apitoken": "${{ secrets.OPENSHIFT_TOKEN_DEV }}", "acceptUntrustedCerts": "true"}'
         cmd: 'version'
      
-    # PERFORM THE DEPLOY
-    - name: deploy dev
-      id: deploydev
-      run: |
-        oc version
-        oc whoami
-        oc status
-        whereis oc
+    # # NOW WORKING... COMMENTING OUT    
+    # # PERFORM THE DEPLOY
+    # - name: deploy dev
+    #   id: deploydev
+    #   run: |
+    #     oc version
+    #     oc whoami
+    #     oc status
+    #     whereis oc
 
-        #TODO:
-        # need to create a service account in the namespace defined for this 
-        # deploy, also want to define the role for that service account, and
-        # put it all in a TEMPLATE
+    #     #TODO:
+    #     # need to create a service account in the namespace defined for this 
+    #     # deploy, also want to define the role for that service account, and
+    #     # put it all in a TEMPLATE
 
-        #TODO: parameterize this in an env var
-        DEPLOY_NAMESPACE=${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
-        echo deploy namespace is $DEPLOY_NAMESPACE
-        echo docker tag $DOCKER_VERSION_TAG
+    #     #TODO: parameterize this in an env var
+    #     DEPLOY_NAMESPACE=${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
+    #     echo deploy namespace is $DEPLOY_NAMESPACE
+    #     echo docker tag $DOCKER_VERSION_TAG
 
-        echo tag version is ${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }}
+    #     echo tag version is ${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }}
 
 
-        # ------------------- extract the object names from the template -------------------
-        ROUTENAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | jq '.items[] | select(.kind=="Route") | .metadata.name' | tr -d '"')
-        DEPLOYNAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG  | jq '.items[] | select(.kind=="DeploymentConfig") | .metadata.name'| tr -d '"')
-        SERVICENAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG  | jq '.items[] | select(.kind=="Service") | .metadata.name' | tr -d '"')
-        echo routename $ROUTENAME
-        echo depoloyname $DEPLOYNAME
-        echo servicename $SERVICENAME
+    #     # ------------------- extract the object names from the template -------------------
+    #     ROUTENAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | jq '.items[] | select(.kind=="Route") | .metadata.name' | tr -d '"')
+    #     DEPLOYNAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG  | jq '.items[] | select(.kind=="DeploymentConfig") | .metadata.name'| tr -d '"')
+    #     SERVICENAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG  | jq '.items[] | select(.kind=="Service") | .metadata.name' | tr -d '"')
+    #     echo routename $ROUTENAME
+    #     echo depoloyname $DEPLOYNAME
+    #     echo servicename $SERVICENAME
 
-        # ------------------- delete objects if they exist -------------------
-        EXISTINGDEPLOYNAME=$(oc get deploymentconfigs -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$DEPLOYNAME'") | .metadata.name' | tr -d '"')
-        echo existing deploy name $EXISTINGDEPLOYNAME
-        if [ ! -z "$EXISTINGDEPLOYNAME" ]
-        then
-          echo deleting $EXISTINGDEPLOYNAME
-          oc delete deploymentconfig $EXISTINGDEPLOYNAME
-        fi
-        echo route name is $ROUTENAME
-        EXISTINGROUTENAME=$(oc get routes -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$ROUTENAME'") | .metadata.name' | tr -d '"')
-        if [ ! -z "$EXISTINGROUTENAME" ]
-        then
-          oc delete route $EXISTINGROUTENAME
-        fi
-        EXISTINGSERVICENAME=$(oc get services -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$SERVICENAME'") | .metadata.name' | tr -d '"')
-        echo service name is $EXISTINGSERVICENAME
-        if [ ! -z "$EXISTINGSERVICENAME" ]
-        then
-          oc delete service $EXISTINGSERVICENAME
-        fi
+    #     # ------------------- delete objects if they exist -------------------
+    #     EXISTINGDEPLOYNAME=$(oc get deploymentconfigs -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$DEPLOYNAME'") | .metadata.name' | tr -d '"')
+    #     echo existing deploy name $EXISTINGDEPLOYNAME
+    #     if [ ! -z "$EXISTINGDEPLOYNAME" ]
+    #     then
+    #       echo deleting $EXISTINGDEPLOYNAME
+    #       oc delete deploymentconfig $EXISTINGDEPLOYNAME
+    #     fi
+    #     echo route name is $ROUTENAME
+    #     EXISTINGROUTENAME=$(oc get routes -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$ROUTENAME'") | .metadata.name' | tr -d '"')
+    #     if [ ! -z "$EXISTINGROUTENAME" ]
+    #     then
+    #       oc delete route $EXISTINGROUTENAME
+    #     fi
+    #     EXISTINGSERVICENAME=$(oc get services -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$SERVICENAME'") | .metadata.name' | tr -d '"')
+    #     echo service name is $EXISTINGSERVICENAME
+    #     if [ ! -z "$EXISTINGSERVICENAME" ]
+    #     then
+    #       oc delete service $EXISTINGSERVICENAME
+    #     fi
 
-        # ------------------- NOW CREATE THE OBJECTS -------------------
-        oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p CONTAINER_SRC_SECRET_NAME=bcdcsmk-image-secret -p IMAGE_LABEL=${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }} -p DEPLOY_NAMESPACE=$DEPLOY_NAMESPACE | oc create -n $DEPLOY_NAMESPACE -f - 
+    #     # ------------------- NOW CREATE THE OBJECTS -------------------
+    #     oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p CONTAINER_SRC_SECRET_NAME=bcdcsmk-image-secret -p IMAGE_LABEL=${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }} -p DEPLOY_NAMESPACE=$DEPLOY_NAMESPACE | oc create -n $DEPLOY_NAMESPACE -f - 
 
-        echo route name is $ROUTENAME
-        # ---- get the path associated with the route
-        ROUTEPATH=$(oc get routes -n ${{ secrets.OPENSHIFT_DEV_NAMESPACE }} -o json | jq  '.items[] | select(.metadata.name=="'$ROUTENAME'") | .spec.host' | tr -d '"')
-        echo route is 'https://'$ROUTEPATH
+    #     echo route name is $ROUTENAME
+    #     # ---- get the path associated with the route
+    #     ROUTEPATH=$(oc get routes -n ${{ secrets.OPENSHIFT_DEV_NAMESPACE }} -o json | jq  '.items[] | select(.metadata.name=="'$ROUTENAME'") | .spec.host' | tr -d '"')
+    #     echo route is 'https://'$ROUTEPATH
 
-        # ------------------- SET THE ROUTEPATH ouptut
-        echo ::set-output name=ROUTEPATH::$ROUTEPATH
+    #     # ------------------- SET THE ROUTEPATH ouptut
+    #     echo ::set-output name=ROUTEPATH::$ROUTEPATH
 
     # ADD A DEPLOY MONITOR STEP TO MAKE SURE IT WAS SUCCESSFUL
 
@@ -154,20 +155,13 @@ jobs:
         # for debugging using existing pull_request
         if [ -z "$issue_url" ] || [ "$issue_url" = "null" ]
           then
-            issue_url="https://api.github.com/repos/bcgov/bcdc-smk/issues/19"
+            issue_url="https://api.github.com/repos/bcgov/bcdc-smk/issues/19/comments"
         fi
 
-
         # ADD COMMENT TO THE ISSUE
+        GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
         ISSUE_COMMENT="link to demo deployment of app\n ${{ steps.deploydev.outputs.ROUTEPATH }}"
-        curl -X POST --location --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+        ISSUE_BODY='{"body": "'$ISSUE_COMMENT'"}'
+        curl $issue_url -X POST --header "Authorization: Bearer $GITHUB_TOKEN" \
           --header "Accept: application/vnd.github.v3+json" \
-          $issue_url -d '{"body":"'$ISSUE_COMMENT'"}'
-
-
-    # REQUEST A REVIEW
-
-
-
-
-
+          --data-raw "$ISSUE_BODY"
