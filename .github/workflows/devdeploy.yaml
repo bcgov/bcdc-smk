@@ -147,6 +147,17 @@ jobs:
         echo route path is ${{ steps.deploydev.outputs.ROUTEPATH }}
         cat $GITHUB_EVENT_PATH
 
+        issue_url=$(jq --raw-output .pull_request.issue_url "$GITHUB_EVENT_PATH")
+        # for debugging using existing pull_request
+        if [ -z "$issue_url" ] || [ "$issue_url" = "null" ]
+          then
+            issue_url="https://api.github.com/repos/bcgov/bcdc-smk/issues/19"
+        fi
+
+        # add the route to the issue url:
+        
+
+
     # REQUEST A REVIEW
 
 
