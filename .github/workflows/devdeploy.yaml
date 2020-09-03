@@ -151,7 +151,7 @@ jobs:
         # ADD COMMENT TO THE ISSUE
         echo 'adding route to the comment for the issue'
         GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
-        ISSUE_COMMENT="link to demo deployment of app\n ${{ steps.deploydev.outputs.ROUTEPATH }}\n\nVerify that it looks good, if so merge the pr, otherwise close"
+        ISSUE_COMMENT="link to demo deployment of app\n https://${{ steps.deploydev.outputs.ROUTEPATH }}\n\nVerify that it looks good, if so merge the pr, otherwise close"
         ISSUE_BODY='{"body": "'$ISSUE_COMMENT'"}'
         curl $ISSUE_URL -X POST --header "Authorization: Bearer $GITHUB_TOKEN" \
           --header "Accept: application/vnd.github.v3+json" \
