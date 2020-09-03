@@ -21,6 +21,7 @@ jobs:
     runs-on: ubuntu-18.04
     outputs:
       dockerversiontag: ${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }}
+      issue_url: ${{ steps.retrieveimagetag.outputs.ISSUE_URL }}
       routepath: ${{ steps.deploydev.outputs.ROUTEPATH }}
     steps:
     # Checking out code to get access to the openshift deploy template later on
@@ -54,8 +55,10 @@ jobs:
         echo image tag is $IMAGE_TAG
         echo ::set-output name=DOCKER_VERSION_TAG::$IMAGE_TAG
 
-        #echo "::set-env name=DOCKER_VERSION_TAG::$IMAGE_TAG"
-        echo testing set of env var: ${{ env.DOCKER_VERSION_TAG }}
+        # -- populate the issue url
+        ISSUE_URL=$(cat issue_url.txt)
+        echo issue url is $ISSUE_URL
+        echo "::set-output name=ISSUE_URL::$ISSUE_URL"
 
         # Clean up the downloaded artifact
         rm docker_image_tag.txt
@@ -129,23 +132,27 @@ jobs:
     - name: Update issue
       id: updateissue
       run: |
+        echo the GITHUB_EVENT_PATH 
+        cat $GITHUB_EVENT_PATH
         ROUTEPATH=${{ steps.deploydev.outputs.ROUTEPATH }}
         echo route path is $ROUTEPATH
 
         # GET THE ISSUE URL
-        issue_url=$(jq --raw-output .pull_request.issue_url "$GITHUB_EVENT_PATH")
-        # for debugging using existing pull_request
-        if [ -z "$issue_url" ] || [ "$issue_url" = "null" ]
-          then
-            issue_url="https://api.github.com/repos/bcgov/bcdc-smk/issues/19/comments"
-        fi
-        echo issue url $issue_url
+        #issue_url=$(jq --raw-output .pull_request.issue_url "$GITHUB_EVENT_PATH")
+        #echo issue url is $issue_url
+        ## for debugging using existing pull_request
+        #if [ -z "$issue_url" ] || [ "$issue_url" = "null" ]
+        #  then
+        #    issue_url="https://api.github.com/repos/bcgov/bcdc-smk/issues/19/comments"
+        #fi
+        #echo issue url $issue_url
+        ISSUE_URL=${{ steps.retrieveimagetag.outputs.ISSUE_URL }}
 
         # ADD COMMENT TO THE ISSUE
         echo 'adding route to the comment for the issue'
         GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
         ISSUE_COMMENT="link to demo deployment of app\n ${{ steps.deploydev.outputs.ROUTEPATH }}\n\nVerify that it looks good, if so merge the pr, otherwise close"
         ISSUE_BODY='{"body": "'$ISSUE_COMMENT'"}'
-        curl $issue_url -X POST --header "Authorization: Bearer $GITHUB_TOKEN" \
+        curl $ISSUE_URL -X POST --header "Authorization: Bearer $GITHUB_TOKEN" \
           --header "Accept: application/vnd.github.v3+json" \
           --data-raw "$ISSUE_BODY"

@@ -51,16 +51,21 @@ jobs:
     - name: output the docker image tag
       id: testoutput
       run: |
+        
         echo tag version is ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
         echo ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }} > docker_image_tag.txt
-        #echo ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }} > /github/home/docker_image_tag.txt
+
+        issue_url=$(jq --raw-output .pull_request.issue_url "$GITHUB_EVENT_PATH")
+        echo $issue_url > issue_url.txt
 
     - name: upload image tag
       id: uploadimagetag
       uses: actions/upload-artifact@v2
       with:
         name: imagetag
-        path: docker_image_tag.txt
+        path: |
+          docker_image_tag.txt
+          issue_url.txt
 
     # -------- DEBUGGING uncomment when done --------
 
