@@ -17,7 +17,6 @@ jobs:
     defaults:
       run:
         shell: bash
-    # RETRIEVE IMAGE TAGS
     runs-on: ubuntu-18.04
     outputs:
       dockerversiontag: ${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }}
@@ -114,7 +113,7 @@ jobs:
         fi
 
         # ------------------- NOW CREATE THE OBJECTS -------------------
-        oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p CONTAINER_SRC_SECRET_NAME=bcdcsmk-image-secret -p IMAGE_LABEL=${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }} -p DEPLOY_NAMESPACE=$DEPLOY_NAMESPACE | oc create -n $DEPLOY_NAMESPACE -f - 
+        oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p CONTAINER_SRC_SECRET_NAME=bcdcsmk-image-secret -p IMAGE_LABEL=${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }} -p DEPLOY_NAMESPACE=$DEPLOY_NAMESPACE | python3 openshift/extractFromTemplate.py Route Service DeploymentConfig | oc create -n $DEPLOY_NAMESPACE -f - 
         echo waiting for the oc deploy to complete
         oc rollout status dc/$DEPLOYNAME -n $DEPLOY_NAMESPACE
 
