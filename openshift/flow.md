@@ -21,6 +21,7 @@ repository:  https://github.com/bcgov/bcdc-smk
 * read:packages
 * Full control of private repositories
 
+
 #### Create a Secret in the target openshift project space
 * type: Image Secret
 * secret name: bcdcsmk-image-secret
