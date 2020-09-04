@@ -10,6 +10,7 @@ objects defined:
 
 Below goes over the details of setting these up.
 
+
 ### Configure *gha-deploy-sa* secret
 
 #### Configure a personal access token for a user that has WRITE access to the 
