@@ -140,3 +140,64 @@ objects:
         name: ${NAME}-${ENV}-svc
         weight: 100
       wildcardPolicy: None
+
+  - kind: ServiceAccount
+    apiVersion: v1
+    metadata:
+      name: ${NAME}-${ENV}-sa
+      labels:
+        app: ${NAME}-${ENV}-sa
+      namespace: ${DEPLOY_NAMESPACE}
+    secrets:
+      - name: gha-deploy-sa-token
+      - name: gha-deploy-sa-dockercfg
+
+  - kind: Role
+    metadata:
+      name:  ${NAME}-${ENV}-role
+      namespace: ${DEPLOY_NAMESPACE}
+    rules:
+      - apiGroups:
+          - apps.openshift.io
+        resources:
+          - deploymentconfigs
+        verbs:
+          - get
+          - list
+          - create
+      - apiGroups:
+          - route.openshift.io
+        resources:
+          - routes
+        verbs:
+          - get
+          - list
+          - create
+
+  - kind: RoleBinding
+    metadata:
+      name: ${NAME}-${ENV}-rb
+      namespace: ${DEPLOY_NAMESPACE}
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: Role
+      name: ${NAME}-${ENV}-role
+    subjects:
+      - apiGroup: rbac.authorization.k8s.io
+        kind: User
+        name: ${NAME}-${ENV}-sa
+    
+
+  - kind: RoleBinding
+    metadata:
+      name: ${NAME}-${ENV}-edit-rb
+      namespace: ${DEPLOY_NAMESPACE}
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: ClusterRole
+      name: edit
+    subjects:
+      - kind: ServiceAccount
+        name: ${NAME}-${ENV}-sa
+        namespace: ${DEPLOY_NAMESPACE}
+        
