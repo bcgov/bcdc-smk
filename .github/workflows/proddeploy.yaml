@@ -82,7 +82,7 @@ jobs:
       id: proddeploy
       run: |
         echo deploying to prod
-        DEPLOY_NAMESPACE=${{ secrets.OPENSHIFT_PROD_NAMESPACE }}
+        DEPLOY_NAMESPACE=${{ secrets.OPENSHIFT_PRD_NAMESPACE }}
 
         # extract deploy name from the template
         DEPLOYNAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=prd  | jq '.items[] | select(.kind=="DeploymentConfig") | .metadata.name'| tr -d '"')
