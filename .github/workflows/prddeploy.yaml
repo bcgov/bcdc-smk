@@ -6,22 +6,22 @@
 # https://github.community/t/run-action-only-when-a-pr-is-merged/18268
 
 # name: DEPLOYProd
-# on:
-#   pull_request:
-#     branches: 
-#       - master
-#     types: 
-#       - closed
+on:
+  pull_request:
+    branches: 
+      - master
+    types: 
+      - closed
 
-on: 
-  push:
-    branches: ['dev']
+# on: 
+#   push:
+#     branches: ['dev']
 
 jobs:
   deployprod:
 
     # Commented out for testing
-    # if: github.event.pull_request.merged == 'true'
+    if: github.event.pull_request.merged == 'true'
     defaults:
       run:
         shell: bash
