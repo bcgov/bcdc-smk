@@ -5,7 +5,7 @@
 #
 # https://github.community/t/run-action-only-when-a-pr-is-merged/18268
 
-name: DEPLOYProd
+# name: DEPLOYProd
 on:
   pull_request:
     branches: 
@@ -13,8 +13,14 @@ on:
     types: 
       - closed
 
+# on: 
+#   push:
+#     branches: ['dev']
+
 jobs:
   deployprod:
+
+    # Commented out for testing
     if: github.event.pull_request.merged == 'true'
     defaults:
       run:
@@ -69,7 +75,7 @@ jobs:
     
     # LOGGING INTO OC PROD
     - name: OpenShift Action
-      id: GHAOpenshiftTest
+      id: GHAOCAuthenticationPrd
       uses: redhat-developer/openshift-actions@v1.1
       with:
         version: '3.11.232'
@@ -95,7 +101,7 @@ jobs:
 
     # LOGGING INTO OC DEV
     - name: OpenShift Action
-      id: GHAOpenshiftTest
+      id: GHAOCAuthenticationDev
       uses: redhat-developer/openshift-actions@v1.1
       with:
         version: '3.11.232'
