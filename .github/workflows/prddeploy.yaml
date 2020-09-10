@@ -67,7 +67,7 @@ jobs:
         draft: false
         prerelease: false
     
-    # LOGGING INTO OC
+    # LOGGING INTO OC PROD
     - name: OpenShift Action
       id: GHAOpenshiftTest
       uses: redhat-developer/openshift-actions@v1.1
@@ -92,6 +92,17 @@ jobs:
         echo waiting for the oc deploy to complete
         oc rollout status dc/$DEPLOYNAME -n $DEPLOY_NAMESPACE
   
+
+    # LOGGING INTO OC DEV
+    - name: OpenShift Action
+      id: GHAOpenshiftTest
+      uses: redhat-developer/openshift-actions@v1.1
+      with:
+        version: '3.11.232'
+        openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
+        parameters: '{"apitoken": "${{ secrets.OPENSHIFT_TOKEN_DEV }}", "acceptUntrustedCerts": "true"}'
+        cmd: 'version'
+
     # TEAR DOWN THE DEV ENV
     - name: tear down dev env
       id: teardowndev
@@ -131,5 +142,3 @@ jobs:
         then
           oc delete service $EXISTINGSERVICENAME
         fi
-
-        
