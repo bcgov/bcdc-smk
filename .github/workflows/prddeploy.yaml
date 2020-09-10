@@ -69,7 +69,7 @@ jobs:
     
     # LOGGING INTO OC PROD
     - name: OpenShift Action
-      id: GHAOpenshiftTest
+      id: GHAOCAuthenticationPrd
       uses: redhat-developer/openshift-actions@v1.1
       with:
         version: '3.11.232'
@@ -95,7 +95,7 @@ jobs:
 
     # LOGGING INTO OC DEV
     - name: OpenShift Action
-      id: GHAOpenshiftTest
+      id: GHAOCAuthenticationDev
       uses: redhat-developer/openshift-actions@v1.1
       with:
         version: '3.11.232'
