@@ -8,10 +8,6 @@ on:
     types: 
       - completed
 
-# on: 
-#   push:
-#     branches: ['dev']
-
 jobs:
   deploydev:
     defaults:
