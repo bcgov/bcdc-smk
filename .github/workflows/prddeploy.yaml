@@ -19,7 +19,9 @@ on:
 
 jobs:
   deployprod:
-    if: github.event.pull_request.merged == 'true'
+
+    # Commented out for testing
+    # if: github.event.pull_request.merged == 'true'
     defaults:
       run:
         shell: bash
