@@ -161,12 +161,12 @@ jobs:
         repo-token: ${{ secrets.TOKEN }}
         reviewers: ["GuyTheFlower","crigdongov"]
         #team-reviewers: "a,b,c"
-        
+
     - name: "Send Review Request 2"
-    id: requestreview2
-    if: github.actor != 'franTarkenton'
-      uses: kunihiko-t/review-request-action@master
-      with:
-        repo-token: ${{ secrets.TOKEN }}
-        reviewers: ["GuyTheFlower","crigdongov", "franTarkenton"]
-        #team-reviewers: "a,b,c"
+      id: requestreview2
+      if: github.actor != 'franTarkenton'
+        uses: kunihiko-t/review-request-action@master
+        with:
+          repo-token: ${{ secrets.TOKEN }}
+          reviewers: ["GuyTheFlower","crigdongov", "franTarkenton"]
+          #team-reviewers: "a,b,c"
