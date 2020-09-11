@@ -12,7 +12,8 @@ on:
       - master
     types: 
       - closed
-
+      
+# debugging
 # on: 
 #   push:
 #     branches: ['dev']

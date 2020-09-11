@@ -151,3 +151,22 @@ jobs:
         curl $ISSUE_URL -X POST --header "Authorization: Bearer $GITHUB_TOKEN" \
           --header "Accept: application/vnd.github.v3+json" \
           --data-raw "$ISSUE_BODY"
+
+    # ISSUE A REQUEST FOR REVIEW
+    - name: "Send Review Request 1"
+      id: requestreview1
+      if: github.actor == 'franTarkenton'
+      uses: kunihiko-t/review-request-action@v0.1.3
+      with:
+        repo-token: ${{ secrets.TOKEN }}
+        reviewers: ["GuyTheFlower","crigdongov"]
+        #team-reviewers: "a,b,c"
+        
+    - name: "Send Review Request 2"
+    id: requestreview2
+    if: github.actor != 'franTarkenton'
+      uses: kunihiko-t/review-request-action@master
+      with:
+        repo-token: ${{ secrets.TOKEN }}
+        reviewers: ["GuyTheFlower","crigdongov", "franTarkenton"]
+        #team-reviewers: "a,b,c"
