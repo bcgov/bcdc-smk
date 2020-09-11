@@ -48,7 +48,7 @@ jobs:
       #     value: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
 
     # --------- GET THE ISSUE URL AND CACHE IT -------
-    - name: output the docker image tag
+    - name: output the docker image tag, issue url and the event path
       id: testoutput
       run: |
         
@@ -57,6 +57,7 @@ jobs:
 
         issue_url=$(jq --raw-output .pull_request.issue_url "$GITHUB_EVENT_PATH")
         echo $issue_url > issue_url.txt
+        cp $GITHUB_EVENT_PATH git_event.txt
 
     # --------- CACHE THE IMAGE TAG and ISSUE URL IN AN ARTIFACT
     - name: upload image tag
@@ -67,6 +68,7 @@ jobs:
         path: |
           docker_image_tag.txt
           issue_url.txt
+          git_event.txt
 
     # -------- CREATE THE DOCKER IMAGE --------
     - name: Create the docker image

@@ -18,6 +18,7 @@ jobs:
       dockerversiontag: ${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }}
       issue_url: ${{ steps.retrieveimagetag.outputs.ISSUE_URL }}
       routepath: ${{ steps.deploydev.outputs.ROUTEPATH }}
+      eventinfo: ${{ steps.retrieveimagetag.outputs.EVENT_INFO }}
     steps:
     # Checking out code to get access to the openshift deploy template later on
     # could also reference the github url?
@@ -54,6 +55,9 @@ jobs:
         ISSUE_URL=$(cat issue_url.txt)
         echo issue url is $ISSUE_URL
         echo "::set-output name=ISSUE_URL::$ISSUE_URL"
+
+        EVENT_INFO=$(cat git_event.txt)
+        echo "::set-output name=EVENT_INFO::$EVENT_INFO"
 
         # Clean up the downloaded artifact
         rm docker_image_tag.txt
@@ -152,21 +156,17 @@ jobs:
           --header "Accept: application/vnd.github.v3+json" \
           --data-raw "$ISSUE_BODY"
 
-    # ISSUE A REQUEST FOR REVIEW
-    - name: "Send Review Request 1"
-      id: requestreview1
-      if: github.actor == 'franTarkenton'
-      uses: kunihiko-t/review-request-action@v0.1.3
-      with:
-        repo-token: ${{ secrets.TOKEN }}
-        reviewers: ["GuyTheFlower","crigdongov"]
-        #team-reviewers: "a,b,c"
-
     - name: "Send Review Request 2"
-      id: requestreview2
-      if: github.actor != 'franTarkenton'
-      uses: kunihiko-t/review-request-action@master
-      with:
-        repo-token: ${{ secrets.TOKEN }}
-        reviewers: ["GuyTheFlower","crigdongov", "franTarkenton"]
-        #team-reviewers: "a,b,c"
+      id: requestreview
+      run: |
+        EVENT_INFO=${{ steps.retrieveimagetag.outputs.EVENT_INFO }}
+        echo $EVENT_INFO
+        GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+        # curl --location --request POST 'https://api.github.com/repos/bcgov/bcdc-smk/pulls/30/requested_reviewers' \
+        # --header "Authorization: Bearer $GITHUB_TOKEN" \
+        # --header 'Content-Type: text/plain' \
+        # --data-raw ' {"reviewers":["GuyTheFlower"]}'
+
+        #   repo-token: ${{ secrets.TOKEN }}
+        #   reviewers: ["GuyTheFlower","crigdongov", "franTarkenton"]
+        #   #team-reviewers: "a,b,c"
