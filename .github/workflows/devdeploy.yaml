@@ -161,13 +161,15 @@ jobs:
       id: requestreview
       run: |
         EVENT_INFO=${{ steps.retrieveimagetag.outputs.EVENT_INFO }}
-        echo $EVENT_INFO
         GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
-        # curl --location --request POST 'https://api.github.com/repos/bcgov/bcdc-smk/pulls/30/requested_reviewers' \
-        # --header "Authorization: Bearer $GITHUB_TOKEN" \
-        # --header 'Content-Type: text/plain' \
-        # --data-raw ' {"reviewers":["GuyTheFlower"]}'
 
-        #   repo-token: ${{ secrets.TOKEN }}
-        #   reviewers: ["GuyTheFlower","crigdongov", "franTarkenton"]
-        #   #team-reviewers: "a,b,c"
+        PR_NUMBER=$(echo $EVENT_INFO | jq ".number")
+        PR_URL=$(echo $EVENT_INFO | jq ".pull_request.url" | tr -d '"')
+        REVIEW_URL="$PR_URL/requested_reviewers"
+        REVIEWERS='{"reviewers":["GuyTheFlower"]}'
+
+        curl --location --request POST  $REVIEW_URL\
+        --header "Authorization: Bearer $GITHUB_TOKEN" \
+        --header 'Content-Type: text/plain' \
+        --data-raw "$REVIEWERS"
+
