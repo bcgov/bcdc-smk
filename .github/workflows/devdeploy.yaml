@@ -18,6 +18,7 @@ jobs:
       dockerversiontag: ${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }}
       issue_url: ${{ steps.retrieveimagetag.outputs.ISSUE_URL }}
       routepath: ${{ steps.deploydev.outputs.ROUTEPATH }}
+      eventinfo: ${{ steps.retrieveimagetag.outputs.EVENT_INFO }}
     steps:
     # Checking out code to get access to the openshift deploy template later on
     # could also reference the github url?
@@ -54,6 +55,10 @@ jobs:
         ISSUE_URL=$(cat issue_url.txt)
         echo issue url is $ISSUE_URL
         echo "::set-output name=ISSUE_URL::$ISSUE_URL"
+
+        EVENT_INFO=$(cat git_event.txt)
+        echo event info is $EVENT_INFO
+        echo "::set-output name=EVENT_INFO::$EVENT_INFO"
 
         # Clean up the downloaded artifact
         rm docker_image_tag.txt
@@ -127,7 +132,7 @@ jobs:
     - name: Update issue
       id: updateissue
       run: |
-        echo the GITHUB_EVENT_PATH 
+        echo the GITHUB_EVENT_PATH
         cat $GITHUB_EVENT_PATH
         ROUTEPATH=${{ steps.deploydev.outputs.ROUTEPATH }}
         echo route path is $ROUTEPATH
@@ -148,6 +153,29 @@ jobs:
         GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
         ISSUE_COMMENT="link to demo deployment of app\n https://${{ steps.deploydev.outputs.ROUTEPATH }}\n\nVerify that it looks good, if so merge the pr, otherwise close"
         ISSUE_BODY='{"body": "'$ISSUE_COMMENT'"}'
+
         curl $ISSUE_URL -X POST --header "Authorization: Bearer $GITHUB_TOKEN" \
           --header "Accept: application/vnd.github.v3+json" \
           --data-raw "$ISSUE_BODY"
+
+    - name: "Send Review Request 2"
+      id: requestreview
+      run: |
+        # git_event.txt
+        EVENT_INFO=$(cat git_event.txt)
+        GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+
+        PR_NUMBER=$(echo $EVENT_INFO | jq ".number")
+        echo pr number is $PR_NUMBER
+        PR_URL=$(echo $EVENT_INFO | jq ".pull_request.url" | tr -d '"')
+        echo pr url is $PR_URL
+        REVIEW_URL="$PR_URL/requested_reviewers"
+        echo review url $REVIEW_URL
+        REVIEWERS='{"reviewers":["GuyTheFlower"]}'
+        echo reviewers are $REVIEWERS
+
+        curl --location --request POST  "$REVIEW_URL" \
+        --header "Authorization: Bearer $GITHUB_TOKEN" \
+        --header 'Content-Type: text/plain' \
+        --data-raw "$REVIEWERS"
+
