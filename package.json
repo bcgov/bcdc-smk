@@ -1,6 +1,6 @@
 {
     "name": "bcdc-smk",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "Core configuration for BCDC map previews",
     "author": "Kevin Netherton",
     "dependencies": {
