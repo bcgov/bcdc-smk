@@ -111,3 +111,6 @@ openshift/jenkins_bcdctools_deployconfig.yaml
 openshift/junk.yaml
 openshift/tmp
 docker_image_tag.txt
+
+caddy
+smk_config.md
