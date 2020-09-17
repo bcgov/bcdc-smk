@@ -111,41 +111,42 @@ jobs:
         cmd: 'version'
 
     # TEAR DOWN THE DEV ENV
-    - name: tear down dev env
-      id: teardowndev
-      run: |
-        # tearing down what is deployed in dev
-        DEPLOY_NAMESPACE=${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
-        echo deploy namespace is $DEPLOY_NAMESPACE
-        DOCKER_VERSION_TAG=${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }}
-        echo docker tag $DOCKER_VERSION_TAG
-        #echo tag version is ${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }}
+    # ----- commented out while testing is going on in BCDC stage deployment ----
+    # - name: tear down dev env
+    #   id: teardowndev
+    #   run: |
+    #     # tearing down what is deployed in dev
+    #     DEPLOY_NAMESPACE=${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
+    #     echo deploy namespace is $DEPLOY_NAMESPACE
+    #     DOCKER_VERSION_TAG=${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }}
+    #     echo docker tag $DOCKER_VERSION_TAG
+    #     #echo tag version is ${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }}
 
-        # ------------------- extract the object names from the template -------------------
-        ROUTENAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | jq '.items[] | select(.kind=="Route") | .metadata.name' | tr -d '"')
-        DEPLOYNAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG  | jq '.items[] | select(.kind=="DeploymentConfig") | .metadata.name'| tr -d '"')
-        SERVICENAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG  | jq '.items[] | select(.kind=="Service") | .metadata.name' | tr -d '"')
-        echo routename $ROUTENAME
-        echo depoloyname $DEPLOYNAME
-        echo servicename $SERVICENAME
+    #     # ------------------- extract the object names from the template -------------------
+    #     ROUTENAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | jq '.items[] | select(.kind=="Route") | .metadata.name' | tr -d '"')
+    #     DEPLOYNAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG  | jq '.items[] | select(.kind=="DeploymentConfig") | .metadata.name'| tr -d '"')
+    #     SERVICENAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG  | jq '.items[] | select(.kind=="Service") | .metadata.name' | tr -d '"')
+    #     echo routename $ROUTENAME
+    #     echo depoloyname $DEPLOYNAME
+    #     echo servicename $SERVICENAME
 
-        # ------------------- delete objects if they exist -------------------
-        EXISTINGDEPLOYNAME=$(oc get deploymentconfigs -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$DEPLOYNAME'") | .metadata.name' | tr -d '"')
-        echo existing deploy name $EXISTINGDEPLOYNAME
-        if [ ! -z "$EXISTINGDEPLOYNAME" ]
-        then
-          echo deleting $EXISTINGDEPLOYNAME
-          oc delete deploymentconfig $EXISTINGDEPLOYNAME
-        fi
-        echo route name is $ROUTENAME
-        EXISTINGROUTENAME=$(oc get routes -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$ROUTENAME'") | .metadata.name' | tr -d '"')
-        if [ ! -z "$EXISTINGROUTENAME" ]
-        then
-          oc delete route $EXISTINGROUTENAME
-        fi
-        EXISTINGSERVICENAME=$(oc get services -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$SERVICENAME'") | .metadata.name' | tr -d '"')
-        echo service name is $EXISTINGSERVICENAME
-        if [ ! -z "$EXISTINGSERVICENAME" ]
-        then
-          oc delete service $EXISTINGSERVICENAME
-        fi
+    #     # ------------------- delete objects if they exist -------------------
+    #     EXISTINGDEPLOYNAME=$(oc get deploymentconfigs -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$DEPLOYNAME'") | .metadata.name' | tr -d '"')
+    #     echo existing deploy name $EXISTINGDEPLOYNAME
+    #     if [ ! -z "$EXISTINGDEPLOYNAME" ]
+    #     then
+    #       echo deleting $EXISTINGDEPLOYNAME
+    #       oc delete deploymentconfig $EXISTINGDEPLOYNAME
+    #     fi
+    #     echo route name is $ROUTENAME
+    #     EXISTINGROUTENAME=$(oc get routes -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$ROUTENAME'") | .metadata.name' | tr -d '"')
+    #     if [ ! -z "$EXISTINGROUTENAME" ]
+    #     then
+    #       oc delete route $EXISTINGROUTENAME
+    #     fi
+    #     EXISTINGSERVICENAME=$(oc get services -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$SERVICENAME'") | .metadata.name' | tr -d '"')
+    #     echo service name is $EXISTINGSERVICENAME
+    #     if [ ! -z "$EXISTINGSERVICENAME" ]
+    #     then
+    #       oc delete service $EXISTINGSERVICENAME
+    #     fi

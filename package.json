@@ -4,8 +4,8 @@
     "description": "Core configuration for BCDC map previews",
     "author": "Kevin Netherton",
     "dependencies": {
-        "smk": "1.0.0-beta.2",
-        "http-server": "^0.12.3"
+        "http-server": "^0.12.3",
+        "smk": "1.0.0-beta.2"
     },
     "scripts": {
         "browse": "http-server -o -c-1 -p 8080"
