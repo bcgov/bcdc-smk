@@ -85,7 +85,8 @@ jobs:
         #echo tag version is ${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }}
 
         # ------------------- extract the object names from the template -------------------
-        ROUTENAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | jq '.items[] | select(.kind=="Route") | .metadata.name' | tr -d '"')
+        ROUTENAME_KONG=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | jq '.items[] | select(.kind=="Route") | .metadata.name' | tr -d '"' | grep extrt)
+        ROUTENAME_OC=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | jq '.items[] | select(.kind=="Route") | .metadata.name' | tr -d '"' | grep "\-rt")
         DEPLOYNAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG  | jq '.items[] | select(.kind=="DeploymentConfig") | .metadata.name'| tr -d '"')
         SERVICENAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG  | jq '.items[] | select(.kind=="Service") | .metadata.name' | tr -d '"')
         echo routename $ROUTENAME
@@ -100,8 +101,16 @@ jobs:
           echo deleting $EXISTINGDEPLOYNAME
           oc delete deploymentconfig $EXISTINGDEPLOYNAME
         fi
-        echo route name is $ROUTENAME
-        EXISTINGROUTENAME=$(oc get routes -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$ROUTENAME'") | .metadata.name' | tr -d '"')
+
+        echo route name is $ROUTENAME_KONG
+        EXISTINGROUTENAME=$(oc get routes -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$ROUTENAME_KONG'") | .metadata.name' | tr -d '"')
+        if [ ! -z "$EXISTINGROUTENAME" ]
+        then
+          oc delete route $EXISTINGROUTENAME
+        fi
+
+        echo route name is $ROUTENAME_OC
+        EXISTINGROUTENAME=$(oc get routes -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$ROUTENAME_OC'") | .metadata.name' | tr -d '"')
         if [ ! -z "$EXISTINGROUTENAME" ]
         then
           oc delete route $EXISTINGROUTENAME
@@ -120,11 +129,11 @@ jobs:
 
         echo route name is $ROUTENAME
         # ---- get the path associated with the route
-        ROUTEPATH=$(oc get routes -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$ROUTENAME'") | .spec.host' | tr -d '"')
-        echo route is 'https://'$ROUTEPATH
+        ROUTEPATH_KONG=$(oc get routes -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$ROUTENAME_KONG'") | .spec.host' | tr -d '"')
+        echo route is 'https://'$ROUTEPATH_KONG
 
         # ------------------- SET THE ROUTEPATH ouptut
-        echo ::set-output name=ROUTEPATH::$ROUTEPATH
+        echo ::set-output name=ROUTEPATH::$ROUTEPATH_KONG
 
     # ADD A DEPLOY MONITOR STEP TO MAKE SURE IT WAS SUCCESSFUL
 
