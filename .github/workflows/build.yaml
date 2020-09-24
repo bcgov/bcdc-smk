@@ -72,7 +72,7 @@ jobs:
 
     # -------- CREATE THE DOCKER IMAGE --------
     - name: Create the docker image
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v1
       with:
         registry: docker.pkg.github.com
         username: $GITHUB_ACTOR
