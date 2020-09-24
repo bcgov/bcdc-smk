@@ -1,5 +1,7 @@
 # BCDC - SMK
 
+<img src="https://lh3.googleusercontent.com/pw/ACtC-3dk3TY4s-RkVMy5vtgT7YerYV-KcShjEFrBdminjSZ5BynNTkCu1CNEVZep9SfG_4B73iNwW0T6_MLiFKkyaZtVDxH0IsPTq0iTMacStLz6aFdww3kgMau1dW_LlVs6DovWkpU0vU9WW82uenYaXjutSQ=w1242-h699-no?authuser=0" width=650><br><br>
+
 This repository contains the code that run's the base SMK site that the 
 BC Data Catalog will use for map previews.
 
@@ -52,6 +54,11 @@ map at that url displays.
 
 ## Build - Test - Deploy (CD/CI)
 
+This is automated through github actions.  The image stream for bcdc-smk
+is: https://github.com/bcgov/bcdc-smk/packages/402546/versions
+
+To trigger a build / dev deploy commit changes, push to github and create a pull request.
+
 #### Commit / push changes
 
 To deploy stage and commit the changes you have made and push them up 
@@ -82,3 +89,4 @@ pr. closed and merged to master
 1. deploys to prod
 1. deletes the dev env.
 
+<br><br><img src="https://acdc-tributeband.com/wp-content/uploads/logo.png">
