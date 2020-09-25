@@ -17,7 +17,7 @@ jobs:
     outputs:
       dockerversiontag: ${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }}
       issue_url: ${{ steps.retrieveimagetag.outputs.ISSUE_URL }}
-      #routepath: ${{ steps.deploydev.outputs.ROUTEPATH }}
+      routepath: ${{ steps.deploydev.outputs.ROUTEPATH }}
       eventinfo: ${{ steps.retrieveimagetag.outputs.EVENT_INFO }}
     steps:
     # Checking out code to get access to the openshift deploy template later on
