@@ -79,7 +79,7 @@ jobs:
       id: deploydev
       run: |
         DEPLOY_NAMESPACE=${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
-        DEV_DEPLOY_ROUTE_HOST=${{ secrets.DEV_DEPLOY_ROUTE_HOST }}
+        DEV_DEPLOY_ROUTE_HOST=bcdc-smk-dev.data.gov.bc.ca
 
         DOCKER_VERSION_TAG=${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }}
         echo docker tag $DOCKER_VERSION_TAG
