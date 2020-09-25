@@ -80,16 +80,16 @@ jobs:
       run: |
         DEPLOY_NAMESPACE=${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
         DEV_DEPLOY_ROUTE_HOST=${{ secrets.DEV_DEPLOY_ROUTE_HOST }}
-        echo deploy namespace is $DEPLOY_NAMESPACE
+
         DOCKER_VERSION_TAG=${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }}
         echo docker tag $DOCKER_VERSION_TAG
-        #echo tag version is ${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }}
 
         # ------------------- extract the object names from the template -------------------
         ROUTENAME_KONG=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | jq '.items[] | select(.kind=="Route") | .metadata.name' | tr -d '"' | grep extrt)
         ROUTENAME_OC=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG | jq '.items[] | select(.kind=="Route") | .metadata.name' | tr -d '"' | grep "\-rt")
         DEPLOYNAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG  | jq '.items[] | select(.kind=="DeploymentConfig") | .metadata.name'| tr -d '"')
         SERVICENAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p IMAGE_LABEL=$DOCKER_VERSION_TAG  | jq '.items[] | select(.kind=="Service") | .metadata.name' | tr -d '"')
+        
         echo routename $ROUTENAME
         echo depoloyname $DEPLOYNAME
         echo servicename $SERVICENAME
@@ -131,21 +131,20 @@ jobs:
         echo route name is $ROUTENAME
         # ---- get the path associated with the route
         ROUTEPATH_KONG=$(oc get routes -n $DEPLOY_NAMESPACE -o json | jq  '.items[] | select(.metadata.name=="'$ROUTENAME_KONG'") | .spec.host' | tr -d '"')
-        #echo route is 'https://'$ROUTEPATH_KONG
 
         # ------------------- SET THE ROUTEPATH ouptut
-        #echo ::set-output name=ROUTEPATH::$ROUTEPATH_KONG
+        echo ::set-output name=ROUTEPATH::$ROUTEPATH_KONG
 
     # ADD A DEPLOY MONITOR STEP TO MAKE SURE IT WAS SUCCESSFUL
 
     # ADD THE ROUTE TO THE ISSUE
     - name: Update issue
       id: updateissue
+      needs: [deploydev]
       run: |
         echo the GITHUB_EVENT_PATH
         cat $GITHUB_EVENT_PATH
         ROUTEPATH=${{ steps.deploydev.outputs.ROUTEPATH }}
-        #echo route path is $ROUTEPATH
 
         # GET THE ISSUE URL
         #issue_url=$(jq --raw-output .pull_request.issue_url "$GITHUB_EVENT_PATH")
@@ -170,6 +169,7 @@ jobs:
 
     - name: "Send Review Request 2"
       id: requestreview
+      needs: [updateissue]
       run: |
         # git_event.txt
         EVENT_INFO=$(cat git_event.txt)
