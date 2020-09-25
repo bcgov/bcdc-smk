@@ -140,7 +140,6 @@ jobs:
     # ADD THE ROUTE TO THE ISSUE
     - name: Update issue
       id: updateissue
-      needs: [deploydev]
       run: |
         echo the GITHUB_EVENT_PATH
         cat $GITHUB_EVENT_PATH
@@ -169,7 +168,6 @@ jobs:
 
     - name: "Send Review Request 2"
       id: requestreview
-      needs: [updateissue]
       run: |
         # git_event.txt
         EVENT_INFO=$(cat git_event.txt)
