@@ -23,15 +23,6 @@
     "createdDate": "2020-08-10T18:46:29.944Z",
     "tools": [
         {
-            "type": "toolbar",
-            "enabled": true
-        },
-        {
-            "type": "list-menu",
-            "enabled": true,
-            "title": "bcdc-smk"
-        },
-        {
             "type": "pan",
             "enabled": true
         },
@@ -40,18 +31,11 @@
             "enabled": true
         },
         {
-            "type": "about",
-            "enabled": true,
-            "title": "About bcdc-smk",
-            "position": "list-menu",
-            "content": "<p>Welcome to SMK!</p><p>Core configuration for BCDC map previews</p>"
-        },
-        {
-            "type": "layers",
+            "type": "baseMaps",
             "enabled": true
         },
         {
-            "type": "baseMaps",
+            "type":     "search",
             "enabled": false
         },
         {
@@ -77,12 +61,8 @@
             }
         },
         {
-            "type": "search",
-            "enabled": true
-        },
-        {
             "type": "coordinate",
-            "enabled": true
+            "enabled": false
         },
         {
             "type": "measure",
