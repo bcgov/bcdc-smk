@@ -36,11 +36,11 @@
         },
         {
             "type":     "search",
-            "enabled": false
+            "enabled": true
         },
         {
             "type": "identify",
-            "enabled": true,
+            "enabled": false,
             "showPanel": true,
             "showWidget": true,
             "style": {
@@ -74,7 +74,7 @@
         },
         {
             "type": "scale",
-            "enabled": true
+            "enabled": false
         },
         {
             "type": "minimap",
