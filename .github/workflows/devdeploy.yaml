@@ -179,7 +179,6 @@ jobs:
         echo pr url is $PR_URL
         REVIEW_URL="$PR_URL/requested_reviewers"
         echo review url $REVIEW_URL
-        reviewers = 
         REVIEWERS='{"reviewers":["GuyTheFlower", "NicoledeGreef"]}'
         echo reviewers are $REVIEWERS
 
