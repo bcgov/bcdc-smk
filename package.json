@@ -5,7 +5,7 @@
     "author": "Kevin Netherton",
     "dependencies": {
         "http-server": "^0.12.3",
-        "smk": "1.0.0-beta.2"
+        "smk": "1.0.0-beta.3"
     },
     "scripts": {
         "browse": "http-server -o -c-1 -p 8080"
