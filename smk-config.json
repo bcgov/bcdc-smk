@@ -78,7 +78,7 @@
         },
         {
             "type": "minimap",
-            "enabled": true
+            "enabled": false
         },
         {
             "type": "directions",
