@@ -1,0 +1,2 @@
+{{ .Values.specialmessage }}
+Vote Trump!
