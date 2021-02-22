@@ -1,0 +1,30 @@
+ame: "DEV Deploy"
+
+#TODO: once working change the event the action is associated to the one below
+on:
+  workflow_dispatch:
+    branchess: [ad-ocp4-template]
+
+jobs:
+  deploydev:
+    defaults:
+      run:
+        shell: bash
+    runs-on: ubuntu-18.04
+
+    steps:
+    # Checking out code to get access to the openshift deploy template later on
+    # could also reference the github url?
+    - uses: actions/checkout@v2
+      id: checkout
+      with:
+        fetch-depth: 0
+
+    # LOGGING INTO OC
+    - name: OpenShift Action
+      id: GHAOpenshiftTest
+      uses: redhat-developer/openshift-actions@v1.1
+      with:
+        openshift_server_url: ${{ secrets.OPENSHIFT4_SERVER_URL }}
+        parameters: '{"apitoken": "${{ secrets.OPENSHIFT4_TOKEN_DEV }}", "acceptUntrustedCerts": "true"}'
+        cmd: 'version'
