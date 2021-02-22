@@ -1,4 +1,4 @@
-ame: "ocp4 dev"
+name: "ocp4 dev"
 
 #TODO: once working change the event the action is associated to the one below
 on:
