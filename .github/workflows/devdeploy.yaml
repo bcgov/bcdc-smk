@@ -69,16 +69,15 @@ jobs:
       id: GHAOpenshiftTest
       uses: redhat-developer/openshift-actions@v1.1
       with:
-        version: '3.11.232'
-        openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
-        parameters: '{"apitoken": "${{ secrets.OPENSHIFT_TOKEN_DEV }}", "acceptUntrustedCerts": "true"}'
+        openshift_server_url: ${{ secrets.OPENSHIFT4_SERVER_URL }}
+        parameters: '{"apitoken": "${{ secrets.OPENSHIFT4_TOKEN_DEV }}", "acceptUntrustedCerts": "true"}'
         cmd: 'version'
      
     # PERFORM THE DEPLOY
     - name: deploy dev
       id: deploydev
       run: |
-        DEPLOY_NAMESPACE=${{ secrets.OPENSHIFT_DEV_NAMESPACE }}
+        DEPLOY_NAMESPACE=${{ secrets.OPENSHIFT4_DEV_NAMESPACE }}
         DEV_DEPLOY_ROUTE_HOST=bcdc-smk-dev.data.gov.bc.ca
 
         DOCKER_VERSION_TAG=${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }}
