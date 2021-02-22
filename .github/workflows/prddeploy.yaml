@@ -104,9 +104,8 @@ jobs:
       id: GHAOCAuthenticationDev
       uses: redhat-developer/openshift-actions@v1.1
       with:
-        version: '3.11.232'
-        openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
-        parameters: '{"apitoken": "${{ secrets.OPENSHIFT_TOKEN_DEV }}", "acceptUntrustedCerts": "true"}'
+        openshift_server_url: ${{ secrets.OPENSHIFT4_SERVER_URL }}
+        parameters: '{"apitoken": "${{ secrets.OPENSHIFT4_TOKEN_DEV }}", "acceptUntrustedCerts": "true"}'
         cmd: 'version'
 
     # TEAR DOWN THE DEV ENV
