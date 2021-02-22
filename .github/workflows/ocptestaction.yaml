@@ -3,7 +3,7 @@ ame: "DEV Deploy"
 #TODO: once working change the event the action is associated to the one below
 on:
   workflow_dispatch:
-    branchess: [ad-ocp4-template]
+    branches: [ad-ocp4-test-action]
 
 jobs:
   deploydev:
