@@ -79,9 +79,8 @@ jobs:
       id: GHAOCAuthenticationPrd
       uses: redhat-developer/openshift-actions@v1.1
       with:
-        version: '3.11.232'
-        openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
-        parameters: '{"apitoken": "${{ secrets.OPENSHIFT_TOKEN_PRD }}", "acceptUntrustedCerts": "true"}'
+        openshift_server_url: ${{ secrets.OPENSHIFT4_SERVER_URL }}
+        parameters: '{"apitoken": "${{ secrets.OPENSHIFT4_TOKEN_PRD }}", "acceptUntrustedCerts": "true"}'
         cmd: 'version'
     
     # DEPLOY TO PROD
@@ -89,7 +88,7 @@ jobs:
       id: proddeploy
       run: |
         echo deploying to prod
-        DEPLOY_NAMESPACE=${{ secrets.OPENSHIFT_PRD_NAMESPACE }}
+        DEPLOY_NAMESPACE=${{ secrets.OPENSHIFT4_PRD_NAMESPACE }}
 
         # extract deploy name from the template
         DEPLOYNAME=$(oc process -f ./openshift/deployTemplate.yaml -p ENV=prd  | jq '.items[] | select(.kind=="DeploymentConfig") | .metadata.name'| tr -d '"')
