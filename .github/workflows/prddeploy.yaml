@@ -5,7 +5,8 @@
 #
 # https://github.community/t/run-action-only-when-a-pr-is-merged/18268
 
-# name: DEPLOYProd
+name: "PROD deploy"
+
 on:
   pull_request:
     branches: 
