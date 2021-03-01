@@ -1,7 +1,7 @@
-apiVersion: v1
+apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
-  name: BCDC_SMK_TEMPLATE
+  name: bcdc-smk-template
 labels:
   app: bcdc-smk
 parameters:

@@ -4,7 +4,7 @@ name: "DEV Deploy"
 #TODO: once working change the event the action is associated to the one below
 on:
   workflow_run:
-    workflows: ["BUILDPackage", "build"]
+    workflows: ["BUILD Package", "build"]
     types: 
       - completed
 
