@@ -15,10 +15,11 @@
             ],
             "zoom": 6.676380220353304
         },
-        "baseMap": "Streets"
+        "esriApiKey": "<to be provided>",
+        "baseMap": "bcgov"
     },
     "layers": [],
-    "version": "0.9.0-beta.3",
+    "version": "1.0.1",
     "createdBy": "Kevin Netherton",
     "createdDate": "2020-08-10T18:46:29.944Z",
     "tools": [
