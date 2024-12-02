@@ -24,12 +24,12 @@ jobs:
 
     name: Build BCDC-SMK container image
     # The type of runner that the job will run on
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     outputs:
       dockerversiontag: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       id: checkout
       with:
         # Disabling shallow clone is recommended for improving relevancy of reporting
@@ -62,7 +62,7 @@ jobs:
     # --------- CACHE THE IMAGE TAG and ISSUE URL IN AN ARTIFACT
     - name: upload image tag
       id: uploadimagetag
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: imagetag
         path: |
@@ -74,7 +74,7 @@ jobs:
     - name: Create the docker image
       uses: docker/build-push-action@v1
       with:
-        registry: docker.pkg.github.com
+        registry: ghcr.io
         username: $GITHUB_ACTOR
         password: ${{ secrets.GITHUB_TOKEN  }}
         repository: bcgov/bcdc-smk/bcdc-smk
