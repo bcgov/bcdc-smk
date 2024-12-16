@@ -26,7 +26,7 @@ repository:  https://github.com/bcgov/bcdc-smk
 * type: Image Secret
 * secret name: bcdcsmk-image-secret
 * Authentication: Image Registry Credentials
-* Image Registry Server Address: docker.pkg.github.com/bcgov/bcdc-smk/bcdc-smk
+* Image Registry Server Address: ghcr.io/bcgov/bcdc-smk/bcdc-smk
 
 
 #### Create a service account 

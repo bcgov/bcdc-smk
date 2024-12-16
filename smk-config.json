@@ -15,10 +15,11 @@
             ],
             "zoom": 6.676380220353304
         },
-        "baseMap": "Streets"
+        "esriApiKey": "AAPTxy8BH1VEsoebNVZXo8HurGGT_aCYgwCokRuPIAG5xSNuKTy4YvprSz_8gsh-llA428WQLbub59AvL7Vqq0WxOMBde6XTOmB0jkCxW4n59DLiYkN4tPwEaTnCtos8sUlWGZQSjl3lPZ0XM61ZkYR3M3QY8du3_BH3IZhyIg63PgYU4dgbXSYQOryTwd8izSWgEXS-8CCbPsNR6jLnoFipFDDa-w1R3FHGZifjDuJ83oM.AT1_qYsJlLTy",
+        "baseMap": "bcgov"
     },
     "layers": [],
-    "version": "0.9.0-beta.3",
+    "version": "1.0.1",
     "createdBy": "Kevin Netherton",
     "createdDate": "2020-08-10T18:46:29.944Z",
     "tools": [

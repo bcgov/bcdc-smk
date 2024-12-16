@@ -13,7 +13,7 @@ jobs:
     defaults:
       run:
         shell: bash
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     outputs:
       dockerversiontag: ${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }}
       issue_url: ${{ steps.retrieveimagetag.outputs.ISSUE_URL }}
@@ -22,7 +22,7 @@ jobs:
     steps:
     # Checking out code to get access to the openshift deploy template later on
     # could also reference the github url?
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       id: checkout
       with:
         fetch-depth: 0

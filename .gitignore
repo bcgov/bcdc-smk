@@ -105,6 +105,9 @@ dist
 # TernJS port file
 .tern-port
 
+# IDE files
+.vscode
+
 openshift/junk.js
 openshift/jenkins_etltools_deployconfig.yaml
 openshift/jenkins_bcdctools_deployconfig.yaml

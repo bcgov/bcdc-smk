@@ -13,7 +13,7 @@ parameters:
     value: dev
   - name: "CONTAINER_SRC"
     description: "path to the container/image stream"
-    value: docker.pkg.github.com/bcgov/bcdc-smk/bcdc-smk
+    value: ghcr.io/bcgov/bcdc-smk/bcdc-smk
   - name: "CONTAINER_SRC_SECRET_NAME"
     description: "name of the secret that is used to retrieve the container, require by github hosted packages (images)"
     value: bcdcsmk-image-secret
