@@ -13,7 +13,7 @@ jobs:
     defaults:
       run:
         shell: bash
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       dockerversiontag: ${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }}
       issue_url: ${{ steps.retrieveimagetag.outputs.ISSUE_URL }}
