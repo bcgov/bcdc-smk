@@ -40,22 +40,19 @@ objects:
       namespace: ${DEPLOY_NAMESPACE}
     type: kubernetes.io/dockerconfigjson
 
-  - kind: "DeploymentConfig"
-    apiVersion: "v1"
+  - kind: Deployment
+    apiVersion: apps/v1
     metadata:
-      annotations:
-        openshift.io/generated-by: OpenShiftNewApp
-      generation: 4
       labels:
         app: ${NAME}-${ENV}-app
-      name: ${NAME}-${ENV}-dc
+      name: ${NAME}-${ENV}-deployment
       namespace: ${DEPLOY_NAMESPACE}
     spec:
-      replicas: 2
+      replicas: 1
       revisionHistoryLimit: 10
       selector:
-        app: ${NAME}-${ENV}-app
-        deploymentconfig: ${NAME}-${ENV}-dc
+        matchLabels:
+          app: ${NAME}-${ENV}-app
       strategy:
         activeDeadlineSeconds: 21600
         resources: {}
@@ -65,15 +62,11 @@ objects:
           maxUnavailable: 25%
           timeoutSeconds: 600
           updatePeriodSeconds: 1
-        
-        type: Rolling
+        type: RollingUpdate
       template:
         metadata:
-          annotations:
-            openshift.io/generated-by: OpenShiftNewApp
           labels:
             app: ${NAME}-${ENV}-app
-            deploymentconfig: ${NAME}-${ENV}-dc
         spec:
           containers:
             - image: "${CONTAINER_SRC}:${IMAGE_LABEL}"
@@ -88,7 +81,6 @@ objects:
                 periodSeconds: 10
                 successThreshold: 1
                 timeoutSeconds: 7
-    
               name: ${NAME}-${ENV}-app
               ports:
                 - containerPort: 8080
@@ -103,7 +95,6 @@ objects:
                 periodSeconds: 10
                 successThreshold: 1
                 timeoutSeconds: 7
-        
               resources: {}
               terminationMessagePath: /dev/termination-log
               terminationMessagePolicy: File
@@ -135,8 +126,6 @@ objects:
             timeoutSeconds: 1
           terminationGracePeriodSeconds: 30
       test: false
-      triggers:
-        - type: ConfigChange
 
   - kind: "Service"
     apiVersion: "v1"
@@ -155,7 +144,7 @@ objects:
           targetPort: 8080
       selector:
         app: ${NAME}-${ENV}-app
-        deploymentconfig: ${NAME}-${ENV}-dc
+        deployment: ${NAME}-${ENV}-deployment
       sessionAffinity: None
     
   - kind: Route
@@ -220,7 +209,7 @@ objects:
       - apiGroups:
           - apps.openshift.io
         resources:
-          - deploymentconfigs
+          - deployments
         verbs:
           - get
           - list
@@ -276,6 +265,6 @@ objects:
       minReplicas: 2
       scaleTargetRef:
         apiVersion: v1
-        kind: DeploymentConfig
-        name:  ${NAME}-${ENV}-dc
+        kind: Deployment
+        name:  ${NAME}-${ENV}-deployment
       targetCPUUtilizationPercentage: 85
