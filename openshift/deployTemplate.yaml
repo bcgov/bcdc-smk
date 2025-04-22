@@ -67,6 +67,7 @@ objects:
         metadata:
           labels:
             app: ${NAME}-${ENV}-app
+            deployment: ${NAME}-${ENV}-deployment
         spec:
           containers:
             - image: "${CONTAINER_SRC}:${IMAGE_LABEL}"
