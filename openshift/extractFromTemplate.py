@@ -5,7 +5,7 @@ import argparse
 class ExtractDeployConfigs:
     def __init__(self):
         self.objectTypesToInclude = None
-        self.knownKinds = ['BuildConfig', 'ImageStreamTag', 'ImageStream', 'DeploymentConfig', 'Service', 'Route', 'Role', 'RoleBinding', 'ServiceAccount', 'Secret']
+        self.knownKinds = ['BuildConfig', 'ImageStreamTag', 'ImageStream', 'Deployment', 'Service', 'Route', 'Role', 'RoleBinding', 'ServiceAccount', 'Secret']
 
     def processArgs(self):
         parser = argparse.ArgumentParser(description='Filter the output from oc process by object type.')
