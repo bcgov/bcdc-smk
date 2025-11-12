@@ -28,6 +28,7 @@ jobs:
     outputs:
       dockerversiontag: ${{ steps.calculateImageTag.outputs.DOCKER_VERSION_TAG }}
     steps:
+
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v4
       id: checkout
@@ -37,6 +38,11 @@ jobs:
         # 
         #ref: v2
         fetch-depth: 0
+
+    - name: Replace API Key
+      run: |
+        sed -i 's/ESRI_API_KEY/${{ secrets.ESRI_API_KEY }}/g' smk-config.json
+
     - name: calculateImageTag
       id: calculateImageTag
       run: echo ::set-output name=DOCKER_VERSION_TAG::$(date +%Y%m%d-%H%M)
