@@ -125,7 +125,7 @@ jobs:
         # ------------------- NOW CREATE THE OBJECTS -------------------
         oc process -f ./openshift/deployTemplate.yaml -p ENV=dev -p CONTAINER_SRC_SECRET_NAME=bcdcsmk-image-secret -p IMAGE_LABEL=${{ steps.retrieveimagetag.outputs.DOCKER_VERSION_TAG }} -p DEPLOY_NAMESPACE=$DEPLOY_NAMESPACE -p ROUTE_HOST=$DEV_DEPLOY_ROUTE_HOST | python3 openshift/extractFromTemplate.py Route Service Deployment | oc create -n $DEPLOY_NAMESPACE -f - 
         echo waiting for the oc deploy to complete
-        oc rollout status dc/$DEPLOYNAME -n $DEPLOY_NAMESPACE
+        oc rollout status deployment/$DEPLOYNAME -n $DEPLOY_NAMESPACE
 
         echo route name is $ROUTENAME
         # ---- get the path associated with the route
