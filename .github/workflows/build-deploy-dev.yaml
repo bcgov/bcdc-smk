@@ -8,7 +8,7 @@ on:
   pull_request:
     # debug: remove the dev,putting build action on non existent branches for debug
     # branches: ['master', 'main']
-    branches: ['main', 'main-refactor-wip']
+    branches: ['main', 'main_refactor_wip']
     types: ['opened', 'reopened']
     paths-ignore:
       - openshift/**
