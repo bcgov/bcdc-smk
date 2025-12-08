@@ -74,7 +74,7 @@ jobs:
     - name: Deleting older images
       uses: actions/delete-package-versions@v5
       with:
-        package-name: '<REPLACE-WITH-REPOSITORY-NAME>/<REPLACE-WITH-REPOSITORY-NAME>'
+        package-name: 'bcdc-smk'
         package-type: 'container'
         token: ${{ secrets.GHCR_TOKEN }}
         min-versions-to-keep: 10
