@@ -7,8 +7,7 @@ name: smk-composite-action-tests
 on:
   pull_request:
     # debug: remove the dev,putting build action on non existent branches for debug
-    # branches: ['master', 'main']
-    branches: ['main', 'main_refactor_wip']
+    branches: ['main']
     types: ['opened', 'reopened']
     paths-ignore:
       - openshift/**
