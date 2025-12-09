@@ -4,10 +4,14 @@
     "description": "Core configuration for BCDC map previews",
     "author": "Kevin Netherton",
     "dependencies": {
-        "http-server": "^0.12.3",
-        "@bcgov/smk": "1.2.3"
+        "@bcgov/smk": "1.2.4",
+        "http-server": "^14.1.1"
+    },
+    "overrides": {
+      "follow-redirects": ">=1.15.5"
     },
     "scripts": {
+        "view": "http-server -o -c-1",
         "browse": "http-server -o -c-1 -p 8080"
     }
 }
