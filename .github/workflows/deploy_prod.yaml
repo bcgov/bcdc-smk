@@ -8,7 +8,7 @@
 name: deploy prod
 on:
   pull_request:
-    branches: ['main']
+    branches: ['main', 'main_refactor']
     types: 
       - closed
       

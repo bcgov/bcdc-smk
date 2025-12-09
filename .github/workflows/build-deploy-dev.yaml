@@ -7,7 +7,7 @@ name: smk-composite-action-tests
 on:
   pull_request:
     # debug: remove the dev,putting build action on non existent branches for debug
-    branches: ['main']
+    branches: ['main', 'main_refactor']
     types: ['opened', 'reopened']
     paths-ignore:
       - openshift/**
@@ -45,6 +45,10 @@ jobs:
       id: checkout
       with:
         fetch-depth: 0
+
+    - name: Replace API Key
+      run: |
+        sed -i 's/ESRI_API_KEY/${{ secrets.ESRI_API_KEY }}/g' smk-config.json
 
     - name: Building image
       uses: bcgov/smk-actions/smk-build@main
