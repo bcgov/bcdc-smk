@@ -36,7 +36,7 @@ jobs:
 
     steps:
     # CHECKOUT THE CODE
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       id: checkout
       if: env.OPENSHIFT_SERVER_URL != '' &&  env.OPENSHIFT_TOKEN_DEV != '' && env.GHCR_USER != '' && env.GHCR_TOKEN != ''
       with:
