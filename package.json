@@ -4,7 +4,7 @@
     "description": "Core configuration for BCDC map previews",
     "author": "Kevin Netherton",
     "dependencies": {
-        "@bcgov/smk": "1.2.6",
+        "@bcgov/smk": "1.2.7",
         "http-server": "^14.1.1"
     },
     "scripts": {
